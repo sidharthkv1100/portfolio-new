@@ -1,110 +1,96 @@
+/* ================================
+   GLOBAL RESET & VARIABLES
+================================ */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
+  scroll-behavior: smooth;
+  font-family: "Segoe UI", sans-serif;
+}
+
+:root {
+  --bg-color: #0f172a;
+  --bg-dark: #020617;
+  --text-color: #ffffff;
+  --accent: #38bdf8;
+  --card-bg: #020617;
+}
+
+body.light {
+  --bg-color: #f8fafc;
+  --bg-dark: #e2e8f0;
+  --text-color: #020617;
+  --card-bg: #ffffff;
 }
 
 body {
-  background: #0f172a;
-  color: white;
+  background: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* Navbar */
+/* ================================
+   NAVBAR
+================================ */
 header {
-  display: flex;
-  justify-content: space-between;
-  padding: 20px 10%;
-  background: #020617;
   position: fixed;
+  top: 0;
   width: 100%;
+  padding: 18px 10%;
+  background: var(--bg-dark);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   z-index: 1000;
 }
 
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
 nav a {
-  margin-left: 20px;
-  color: white;
+  margin-left: 22px;
   text-decoration: none;
+  color: var(--text-color);
+  font-size: 15px;
+  transition: 0.3s;
 }
 
 nav a:hover {
-  color: #38bdf8;
+  color: var(--accent);
 }
 
-/* Hero */
-.hero {
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  height: 100vh;
-  padding-top: 80px;
-}
-
-.hero-text h1 span {
-  color: #38bdf8;
-}
-
-.btn {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 25px;
-  background: #38bdf8;
-  color: black;
-  border-radius: 25px;
-  text-decoration: none;
-}
-
-/* Sections */
-.section {
-  padding: 80px 10%;
-  text-align: center;
-}
-
-.dark {
-  background: #020617;
-}
-
-.skills span {
-  display: inline-block;
-  margin: 10px;
-  padding: 10px 20px;
-  border: 1px solid #38bdf8;
-  border-radius: 20px;
-}
-
-.projects {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-
-.card {
-  background: #020617;
-  padding: 20px;
-  border-radius: 15px;
-}
-
-/* Contact */
-form {
-  max-width: 400px;
-  margin: auto;
-}
-
-input, textarea, button {
-  width: 100%;
-  padding: 12px;
-  margin: 10px 0;
-  border-radius: 10px;
-  border: none;
-}
-
-button {
-  background: #38bdf8;
+/* Theme Button */
+.theme-btn {
+  margin-left: 20px;
+  border: 2px solid var(--accent);
+  background: transparent;
+  color: var(--text-color);
+  font-size: 18px;
+  padding: 6px 12px;
+  border-radius: 50%;
   cursor: pointer;
 }
 
-/* Footer */
-footer {
-  padding: 20px;
-  background: #020617;
+/* ================================
+   HERO SECTION
+================================ */
+.hero {
+  min-height: 100vh;
+  padding: 120px 10% 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 50px;
 }
+
+/* Hero Text */
+.hero-text h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.hero-text h1
