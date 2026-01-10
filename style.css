@@ -35,10 +35,12 @@ nav a:hover {
 .hero {
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  height: 100vh;
-  padding-top: 80px;
+  justify-content: space-between;
+  gap: 40px;
+  min-height: 100vh;
+  padding: 120px 10% 60px;
 }
+
 
 .hero-text h1 span {
   color: #38bdf8;
