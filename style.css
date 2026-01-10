@@ -117,8 +117,13 @@ button {
 footer {
   padding: 20px;
   background: #020617;
-  display: flex;
-  justify-content: center; 
-  align-items: center;    
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
   text-align: center;
 }
+
+footer * {
+  margin: 0;
+}
+
