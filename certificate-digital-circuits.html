@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050811">
+  <title>Digital Circuits — NPTEL Certificate | SIDHARTH K V</title>
+  <link rel="stylesheet" href="certificate.css">
+  <script>
+    window.DIGITAL_CERT_CANDIDATES = [
+      "DIGITAL CIRCUITS.jfif",
+      "DIGITAL CIRCUITS_2.jfif",
+      "assets/nptel-digital-circuits.jfif",
+      "assets/DIGITAL CIRCUITS.jfif"
+    ];
+    window.resolveDigitalCertImg = function(imgEl) {
+      const idx = parseInt(imgEl.dataset.tryIndex || "0", 10);
+      if (idx < window.DIGITAL_CERT_CANDIDATES.length) {
+        imgEl.dataset.tryIndex = String(idx + 1);
+        imgEl.src = window.DIGITAL_CERT_CANDIDATES[idx];
+      }
+    };
+  </script>
+</head>
+<body>
+  <div class="ambient"></div>
+
+  <div id="verify-hud" class="verify-hud">
+    <div class="verify-box">
+      <div class="verify-tag">● SWAYAM-NPTEL REGISTRY VERIFICATION</div>
+      <div id="verify-title" class="verify-title">VERIFYING: DIGITAL CIRCUITS</div>
+      <div id="verify-roll" class="verify-roll">CANDIDATE: SIDHARTH K V • ROLL: NPTEL25EE125S1155900740</div>
+      <div class="verify-bar-wrap">
+        <div id="verify-bar" class="verify-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="nav-actions">
+        <a class="back" href="Sidharth_KV_Hardware_Portfolio.html#certifications" onclick="navigateWithHud(event, this.href, 'RETURNING TO HARDWARE PORTFOLIO', 'SYS_ID: SKV-ECE-2026')">
+          <span>‹</span> Back to Portfolio
+        </a>
+        <a class="switch-cert" href="certificate-control-systems.html" onclick="navigateWithHud(event, this.href, 'SWITCHING TO: CONTROL SYSTEMS (ELITE)', 'ROLL: NPTEL26DE27S754700629')">
+          ★ Control Systems (Elite) →
+        </a>
+        <a class="switch-cert" href="certificate-integrated-circuits.html" onclick="navigateWithHud(event, this.href, 'SWITCHING TO: INTEGRATED CIRCUITS (ELITE)', 'ROLL: NPTEL26EE33S1154400163')">
+          ★ Integrated Circuits (Elite) →
+        </a>
+      </div>
+      <div class="brand"><b>●</b> SIDHARTH K V / NPTEL CREDENTIAL VIEWER</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow"><i></i> Verified NPTEL Achievement • IIT Kharagpur</div>
+      <h1>Digital<br><em>Circuits.</em></h1>
+      <p>
+        NPTEL Online Certification (Funded by the MoE, Govt. of India) awarded to <strong>SIDHARTH K V</strong> for successfully completing the 12-week Digital Circuits course from Indian Institute of Technology Kharagpur.
+      </p>
+    </section>
+
+    <figure class="certificate-stage" id="certificate" aria-label="Digital Circuits NPTEL certificate awarded to SIDHARTH K V. Click to zoom.">
+      <div class="certificate-card">
+        <div class="cert-laser-line"></div>
+        <img
+          src="DIGITAL CIRCUITS.jfif"
+          onerror="window.resolveDigitalCertImg(this)"
+          alt="NPTEL Online Certification for Digital Circuits awarded to SIDHARTH K V"
+        >
+      </div>
+      <div class="badge"><i></i> Verified Credential · 53% · SIDHARTH K V</div>
+    </figure>
+
+    <p class="hint">Click the certificate to inspect it closely · Press <kbd>Esc</kbd> to reset zoom</p>
+
+    <section class="metadata">
+      <div class="meta">
+        <small>Candidate Name</small>
+        <strong>SIDHARTH K V</strong>
+      </div>
+      <div class="meta">
+        <small>Issuing Institute &amp; Coordinator</small>
+        <strong>IIT Kharagpur · Prof. Haimanti Banerji</strong>
+      </div>
+      <div class="meta">
+        <small>Course Session &amp; Credits</small>
+        <strong>Jul–Oct 2025 (12 Weeks · 3 or 4 Credits)</strong>
+      </div>
+      <div class="meta">
+        <small>Consolidated Score</small>
+        <strong>53% (Certified Cohort: 2,454)</strong>
+      </div>
+      <div class="meta">
+        <small>Score Breakdown</small>
+        <strong>Assignments: 21.66/25 · Exam: 31.5/75</strong>
+      </div>
+      <div class="meta">
+        <small>NPTEL Roll Number</small>
+        <strong>NPTEL25EE125S1155900740</strong>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const c = document.getElementById('certificate');
+    c.addEventListener('click', () => c.classList.toggle('is-zoomed'));
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') c.classList.remove('is-zoomed');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const hud = document.getElementById('verify-hud');
+      const bar = document.getElementById('verify-bar');
+      requestAnimationFrame(() => { bar.style.width = '100%'; });
+      setTimeout(() => { hud.classList.add('hidden'); }, 620);
+    });
+
+    function navigateWithHud(e, targetUrl, title, subtitle) {
+      e.preventDefault();
+      const hud = document.getElementById('verify-hud');
+      const bar = document.getElementById('verify-bar');
+      document.getElementById('verify-title').textContent = title;
+      document.getElementById('verify-roll').textContent = subtitle;
+      bar.style.width = '0%';
+      hud.classList.remove('hidden');
+      requestAnimationFrame(() => { bar.style.width = '100%'; });
+      setTimeout(() => { window.location.href = targetUrl; }, 520);
+    }
+  </script>
+</body>
+</html>
