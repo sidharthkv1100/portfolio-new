@@ -1,0 +1,1774 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SIDHARTH K V // Electronics & Embedded Hardware Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: {
+                            950: '#050811',
+                            900: '#0a0f1c',
+                            800: '#111827',
+                            700: '#1e293b',
+                        },
+                        copper: {
+                            400: '#fbbf24',
+                            500: '#f59e0b',
+                            600: '#d97706',
+                        },
+                        solder: {
+                            400: '#34d399',
+                            500: '#10b981',
+                            600: '#059669',
+                        },
+                        signal: {
+                            400: '#22d3ee',
+                            500: '#06b6d4',
+                        }
+                    }
+                }
+            }
+        };
+
+        window.PORTRAIT_CANDIDATES = [
+            "IMG20240223092712.jpg",
+            "IMG20240223092712_2.jpg",
+            "assets/sidharth-home-portrait.png",
+            "assets/IMG20240223092712.jpg"
+        ];
+
+        window.handlePortraitFallback = function(imgEl) {
+            if (!imgEl) return;
+
+            try {
+                const saved = JSON.parse(localStorage.getItem("skv_portfolio_v3") || "{}");
+                if (saved && saved.portraitDataUrl && imgEl.src !== saved.portraitDataUrl) {
+                    imgEl.src = saved.portraitDataUrl;
+                    return;
+                }
+            } catch (err) {}
+
+            const idx = parseInt(imgEl.dataset.tryIndex || "0", 10);
+            if (idx < window.PORTRAIT_CANDIDATES.length) {
+                imgEl.dataset.tryIndex = String(idx + 1);
+                imgEl.src = window.PORTRAIT_CANDIDATES[idx];
+                return;
+            }
+
+            if (imgEl.dataset.fallbackApplied === "true") return;
+            imgEl.dataset.fallbackApplied = "true";
+
+            const svgFallback = "data:image/svg+xml;utf8," + encodeURIComponent(
+                '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 460" fill="none">' +
+                '<rect width="400" height="460" fill="#050811"/>' +
+                '<circle cx="200" cy="175" r="92" fill="#0d1424" stroke="#f59e0b" stroke-width="2.5" stroke-opacity="0.65"/>' +
+                '<circle cx="200" cy="150" r="46" fill="#1e293b" stroke="#10b981" stroke-width="2.2"/>' +
+                '<path d="M102 365 C102 285 145 250 200 250 C255 250 298 285 298 365" fill="#1e293b" stroke="#f59e0b" stroke-width="2.5"/>' +
+                '<rect x="44" y="348" width="312" height="68" rx="16" fill="#0a0f1c" stroke="#1e293b" stroke-width="1.5"/>' +
+                '<text x="200" y="382" text-anchor="middle" fill="#f59e0b" font-family="monospace" font-weight="bold" font-size="22">SIDHARTH K V</text>' +
+                '</svg>'
+            );
+            imgEl.src = svgFallback;
+        };
+    </script>
+
+    <style>
+        :root {
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #e2e8f0;
+            --grid-line: rgba(16, 185, 129, 0.06);
+            --portrait-scale: 1.42;
+            --portrait-pos-x: 48%;
+            --portrait-pos-y: 22%;
+            --ios-specular: inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.32), inset 0 -1px 1px 0 rgba(255, 255, 255, 0.08);
+        }
+
+        html.dark {
+            --bg-primary: #050811;
+            --bg-secondary: #0d1424;
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.16);
+            --grid-line: rgba(16, 185, 129, 0.05);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.25s ease, color 0.25s ease;
+            overflow-x: hidden;
+        }
+
+        .pcb-grid-bg {
+            background-size: 34px 34px;
+            background-image: 
+                linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+        }
+
+        /* ==============================================================
+           iOS 26 LIQUID GLASS TILES, CAPSULE BUTTONS & REFRACTION FX
+           ============================================================== */
+        .liquid-aurora {
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+            position: fixed;
+            z-index: 0;
+        }
+        .liquid-aurora::before, .liquid-aurora::after {
+            border-radius: 50%;
+            content: "";
+            filter: blur(55px);
+            opacity: 0.34;
+            position: absolute;
+        }
+        .liquid-aurora::before {
+            animation: liquidDriftOne 18s ease-in-out infinite alternate;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.45), rgba(16, 185, 129, 0) 68%);
+            height: 48vw;
+            left: -14vw;
+            top: 4vh;
+            width: 48vw;
+        }
+        .liquid-aurora::after {
+            animation: liquidDriftTwo 22s ease-in-out infinite alternate;
+            background: radial-gradient(circle, rgba(245, 158, 11, 0.34), rgba(6, 182, 212, 0.16) 40%, rgba(6, 182, 212, 0) 70%);
+            bottom: -14vh;
+            height: 45vw;
+            right: -12vw;
+            width: 45vw;
+        }
+        .liquid-bubble {
+            animation: liquidBubble 14s ease-in-out infinite alternate;
+            background: linear-gradient(140deg, rgba(34, 211, 238, 0.24), rgba(16, 185, 129, 0.04));
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 50%;
+            box-shadow: inset 6px 6px 24px rgba(255, 255, 255, 0.16), 0 0 60px rgba(6, 182, 212, 0.15);
+            height: 19rem;
+            left: 56%;
+            position: absolute;
+            top: 28vh;
+            width: 19rem;
+        }
+
+        @keyframes liquidDriftOne { from { transform: translate3d(-2vw, -2vh, 0) scale(1); } to { transform: translate3d(13vw, 12vh, 0) scale(1.18); } }
+        @keyframes liquidDriftTwo { from { transform: translate3d(2vw, 0, 0) scale(1); } to { transform: translate3d(-17vw, -11vh, 0) scale(1.14); } }
+        @keyframes liquidBubble { from { transform: translate3d(-20px, 0, 0) scale(0.94); } to { transform: translate3d(32px, 50px, 0) scale(1.1); } }
+
+        body > header, body > main { position: relative; z-index: 1; }
+
+        /* iOS 26 Floating Translucent Nav Bar */
+        header.liquid-nav {
+            background: linear-gradient(112deg, rgba(8, 13, 25, 0.72), rgba(17, 24, 39, 0.52) 55%, rgba(6, 182, 212, 0.09)) !important;
+            backdrop-filter: blur(28px) saturate(190%);
+            -webkit-backdrop-filter: blur(28px) saturate(190%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.16) !important;
+            box-shadow: 0 14px 36px rgba(0, 0, 0, 0.28), inset 0 1px rgba(255, 255, 255, 0.18);
+        }
+
+        /* iOS 26 Hero Stage Container */
+        .liquid-hero {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(10, 15, 28, 0.38) 50%, rgba(16, 185, 129, 0.06));
+            backdrop-filter: blur(26px) saturate(180%);
+            -webkit-backdrop-filter: blur(26px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 36px;
+            box-shadow: var(--ios-specular), 0 28px 60px -30px rgba(0, 0, 0, 0.75);
+            overflow: hidden;
+            padding-left: clamp(1.2rem, 4vw, 2.75rem);
+            padding-right: clamp(1.2rem, 4vw, 2.75rem);
+            position: relative;
+        }
+
+        /* iOS 26 Squircle Liquid Glass Tile (.card-hardware) */
+        .card-hardware {
+            position: relative;
+            border-radius: 30px !important;
+            transform-style: preserve-3d;
+            will-change: transform;
+            backdrop-filter: blur(26px) saturate(185%);
+            -webkit-backdrop-filter: blur(26px) saturate(185%);
+            transition:
+                transform 0.38s cubic-bezier(0.22, 1.28, 0.36, 1),
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+            overflow: hidden;
+        }
+
+        html.dark .card-hardware {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.10) 0%, rgba(15, 23, 42, 0.58) 58%, rgba(16, 185, 129, 0.05) 100%) !important;
+            border: 1px solid rgba(255, 255, 255, 0.18) !important;
+            box-shadow:
+                var(--ios-specular),
+                0 22px 48px -22px rgba(0, 0, 0, 0.82);
+        }
+
+        /* Cursor-Tracked Liquid Refraction Highlight */
+        .card-hardware::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            background: radial-gradient(
+                480px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.16),
+                rgba(245, 158, 11, 0.10) 35%,
+                rgba(16, 185, 129, 0.06) 55%,
+                transparent 78%
+            );
+        }
+
+        /* Prismatic Glass Rim Illumination */
+        .card-hardware::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1.5px;
+            pointer-events: none;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            background: radial-gradient(
+                360px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 255, 255, 0.85),
+                rgba(245, 158, 11, 0.7) 40%,
+                rgba(16, 185, 129, 0.55) 65%,
+                transparent 82%
+            );
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .card-hardware:hover::before,
+        .card-hardware:hover::after {
+            opacity: 1;
+        }
+
+        .card-hardware:hover {
+            box-shadow:
+                var(--ios-specular),
+                0 28px 60px -15px rgba(0, 0, 0, 0.78),
+                0 0 32px -6px rgba(245, 158, 11, 0.22),
+                0 0 22px -6px rgba(16, 185, 129, 0.24) !important;
+        }
+
+        .card-hardware > * { position: relative; z-index: 3; }
+
+        /* iOS 26 Capsule Pill Buttons (.liquid-press / buttons / CTAs) */
+        .liquid-press,
+        .proj-filter-btn,
+        .dso-mode-btn,
+        .magnetic-btn {
+            border-radius: 9999px !important;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            box-shadow: inset 0 1.5px 1px rgba(255, 255, 255, 0.28), inset 0 -1px 1px rgba(255, 255, 255, 0.06), 0 8px 20px -8px rgba(0, 0, 0, 0.45);
+            transition:
+                transform 0.34s cubic-bezier(0.22, 1.28, 0.36, 1),
+                box-shadow 0.28s ease,
+                filter 0.28s ease,
+                background-color 0.25s ease,
+                border-color 0.25s ease !important;
+        }
+
+        .liquid-press:hover,
+        .proj-filter-btn:hover,
+        .dso-mode-btn:hover,
+        .magnetic-btn:hover {
+            box-shadow:
+                inset 0 1.5px 1.5px rgba(255, 255, 255, 0.42),
+                0 14px 28px -10px rgba(16, 185, 129, 0.48);
+            filter: brightness(1.08);
+            transform: translateY(-2.5px) scale(1.035);
+        }
+
+        .liquid-press:active,
+        .proj-filter-btn:active,
+        .dso-mode-btn:active,
+        .magnetic-btn:active {
+            transform: translateY(0px) scale(0.96) !important;
+        }
+
+        .pcb-via {
+            width: 10px;
+            height: 10px;
+            border-radius: 9999px;
+            border: 2px solid #f59e0b;
+            background-color: #050811;
+            box-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+            display: inline-block;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+        }
+
+        .smd-pads { display: inline-flex; gap: 4px; align-items: center; }
+        .smd-pad {
+            width: 10px;
+            height: 5px;
+            border-radius: 999px;
+            background: linear-gradient(135deg, #78350f, #b45309);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            transition: all 0.25s ease;
+        }
+        .card-hardware:hover .smd-pad {
+            background: linear-gradient(135deg, #fbbf24, #f59e0b);
+            box-shadow: 0 0 8px rgba(251, 191, 36, 0.85);
+            transform: scaleY(1.2);
+        }
+
+        .hover-trace-line {
+            stroke-dasharray: 320;
+            stroke-dashoffset: 320;
+            transition: stroke-dashoffset 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .card-hardware:hover .hover-trace-line { stroke-dashoffset: 0; }
+
+        .reveal-item {
+            opacity: 0;
+            transform: translateY(24px) scale(0.98);
+            transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.22, 1.28, 0.36, 1);
+        }
+        .reveal-item.revealed {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        /* iOS 26 Liquid Glass Transition Overlay */
+        #bootloader-overlay {
+            transition: opacity 0.45s ease, visibility 0.45s ease;
+        }
+        #bootloader-overlay.boot-complete {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .boot-shutter-top, .boot-shutter-bottom {
+            transition: transform 0.55s cubic-bezier(0.7, 0, 0.2, 1);
+        }
+        #bootloader-overlay.boot-complete .boot-shutter-top { transform: translateY(-100%); }
+        #bootloader-overlay.boot-complete .boot-shutter-bottom { transform: translateY(100%); }
+
+        #bus-transition-overlay {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            backdrop-filter: blur(32px) saturate(190%);
+            -webkit-backdrop-filter: blur(32px) saturate(190%);
+            transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1), visibility 0.24s ease;
+        }
+        #bus-transition-overlay.active {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: all;
+        }
+        #bus-transition-card {
+            transform: scale(0.9) translateY(14px);
+            transition: transform 0.38s cubic-bezier(0.22, 1.28, 0.36, 1);
+            box-shadow: var(--ios-specular), 0 30px 70px rgba(0, 0, 0, 0.75);
+        }
+        #bus-transition-overlay.active #bus-transition-card {
+            transform: scale(1) translateY(0);
+        }
+
+        @media (pointer: fine) {
+            #cursor-reticle {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 34px;
+                height: 34px;
+                border: 1.5px solid rgba(255, 255, 255, 0.45);
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9998;
+                transform: translate(-50%, -50%);
+                transition: width 0.25s cubic-bezier(0.22, 1.28, 0.36, 1), height 0.25s cubic-bezier(0.22, 1.28, 0.36, 1), border-color 0.2s ease, background-color 0.2s ease, border-radius 0.25s ease;
+                mix-blend-mode: screen;
+            }
+            #cursor-reticle.cursor-hover {
+                width: 52px;
+                height: 52px;
+                border-radius: 9999px;
+                border-color: rgba(52, 211, 153, 0.9);
+                background-color: rgba(52, 211, 153, 0.1);
+                box-shadow: 0 0 18px rgba(52, 211, 153, 0.35);
+            }
+            #cursor-dot {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 5px;
+                height: 5px;
+                background: #f59e0b;
+                border-radius: 50%;
+                pointer-events: none;
+                z-index: 9999;
+                transform: translate(-50%, -50%);
+                box-shadow: 0 0 8px #f59e0b;
+            }
+        }
+        @media (pointer: coarse) {
+            #cursor-reticle, #cursor-dot { display: none !important; }
+        }
+
+        .ic-package-frame {
+            position: relative;
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.14), rgba(10, 15, 28, 0.78));
+            backdrop-filter: blur(24px) saturate(180%);
+            border: 1.5px solid rgba(255, 255, 255, 0.28);
+            border-radius: 30px !important;
+            box-shadow: var(--ios-specular), 0 20px 45px -10px rgba(0, 0, 0, 0.75);
+        }
+
+        .engineer-portrait-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: var(--portrait-pos-x, 48%) var(--portrait-pos-y, 22%);
+            transform: scale(var(--portrait-scale, 1.42));
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), filter 0.35s ease;
+        }
+
+        .optics-optical .engineer-portrait-img { filter: contrast(1.06) saturate(1.04) brightness(0.99); }
+        .optics-phosphor .engineer-portrait-img { filter: grayscale(100%) sepia(95%) hue-rotate(105deg) saturate(250%) contrast(1.22) brightness(0.92); }
+        .optics-mono .engineer-portrait-img { filter: grayscale(100%) contrast(1.26) brightness(1.02); }
+
+        .portrait-vignette {
+            background: 
+                radial-gradient(circle at 50% 36%, transparent 38%, rgba(5, 8, 17, 0.62) 78%, rgba(5, 8, 17, 0.94) 100%),
+                linear-gradient(to top, rgba(5, 8, 17, 0.95) 0%, rgba(5, 8, 17, 0.35) 24%, transparent 55%);
+        }
+
+        .qfp-pin-row { display: flex; justify-content: space-evenly; align-items: center; pointer-events: none; }
+        .qfp-pin-h { width: 8px; height: 3.5px; border-radius: 99px; background: linear-gradient(90deg, #92400e, #f59e0b); }
+        .qfp-pin-v { width: 3.5px; height: 8px; border-radius: 99px; background: linear-gradient(180deg, #92400e, #f59e0b); }
+    </style>
+</head>
+<body class="pcb-grid-bg min-h-screen selection:bg-copper-500 selection:text-obsidian-950">
+    <div class="liquid-aurora" aria-hidden="true"><span class="liquid-bubble"></span></div>
+
+    <!-- PRECISION OSCILLOSCOPE CURSOR RETICLE -->
+    <div id="cursor-reticle" class="hidden md:flex items-center justify-center"></div>
+    <div id="cursor-dot" class="hidden md:block"></div>
+
+    <!-- 1. INITIAL WEBPAGE FIRMWARE BOOTLOADER & DSO CALIBRATION OVERLAY -->
+    <div id="bootloader-overlay" class="fixed inset-0 z-[100] flex flex-col justify-between overflow-hidden select-none">
+        <div class="boot-shutter-top absolute inset-x-0 top-0 h-1/2 bg-obsidian-950 border-b border-copper-500/40"></div>
+        <div class="boot-shutter-bottom absolute inset-x-0 bottom-0 h-1/2 bg-obsidian-950 border-t border-solder-500/40"></div>
+
+        <div class="relative z-10 max-w-3xl w-full mx-auto my-auto p-6 sm:p-8">
+            <div class="rounded-[32px] bg-obsidian-900/90 border border-white/20 shadow-2xl p-5 sm:p-7 backdrop-blur-2xl">
+                <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-4 border-b border-slate-800 font-mono text-xs">
+                    <div class="flex items-center gap-2.5">
+                        <span class="w-2.5 h-2.5 rounded-full bg-copper-500 animate-ping"></span>
+                        <span class="font-bold text-white tracking-wider">SKV-HW-BOOT // LIQUID GLASS &amp; DSO v2026.10</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <span class="px-2.5 py-0.5 rounded-full bg-solder-500/15 text-solder-400 border border-solder-500/30 text-[10px]">3x NPTEL (2x ELITE)</span>
+                        <span class="px-2.5 py-0.5 rounded-full bg-copper-500/15 text-copper-400 border border-copper-500/30 text-[10px]">PVDD_24V: OK</span>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+                    <div class="md:col-span-7 bg-obsidian-950/90 rounded-2xl p-3.5 border border-white/10 h-44 flex flex-col justify-between font-mono text-[11px]">
+                        <div id="boot-terminal-log" class="space-y-1.5 text-slate-300 overflow-hidden"></div>
+                        <div class="flex items-center justify-between pt-2 border-t border-slate-800/80 text-[10px] text-slate-500">
+                            <span>MCU: ESP32-S3 / AT89C51</span>
+                            <span id="boot-status-tag" class="text-solder-400">CALIBRATING...</span>
+                        </div>
+                    </div>
+
+                    <div class="md:col-span-5 bg-[#030710] rounded-2xl p-3 border border-white/10 h-44 flex flex-col justify-between relative overflow-hidden">
+                        <div class="flex items-center justify-between font-mono text-[10px] text-slate-400 z-10">
+                            <span class="text-copper-400">CH1: 1kHz CAL</span>
+                            <span id="boot-freq-lock" class="text-solder-400">LOCK: 0%</span>
+                        </div>
+                        <canvas id="boot-dso-canvas" class="w-full h-24 block my-auto" width="234" height="96"></canvas>
+                        <div class="font-mono text-[10px] text-slate-500 flex justify-between z-10">
+                            <span>KICAD-10 DRC: 0 ERR</span>
+                            <span class="text-signal-400">SNR: 96.4dB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-5 space-y-2">
+                    <div class="flex items-center justify-between font-mono text-xs">
+                        <span class="text-slate-400">INITIALIZING LIQUID GLASS UI &amp; TELEMETRY...</span>
+                        <span id="boot-percent" class="text-copper-400 font-bold">0%</span>
+                    </div>
+                    <div class="w-full h-2 rounded-full bg-obsidian-950 border border-slate-800 overflow-hidden">
+                        <div id="boot-progress-bar" class="h-full bg-gradient-to-r from-copper-500 via-amber-400 to-solder-500 transition-all duration-100" style="width: 0%;"></div>
+                    </div>
+                    <div class="flex items-center justify-between pt-2">
+                        <span class="font-mono text-[11px] text-slate-500">ENGINEER: SIDHARTH K V • B.TECH ECE</span>
+                        <button onclick="finishBootSequence()" class="liquid-press px-4 py-1.5 rounded-full font-mono text-xs bg-white/10 hover:bg-copper-500 text-slate-200 hover:text-obsidian-950 border border-white/20 transition">
+                            Skip Boot [ESC]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. iOS 26 LIQUID GLASS LENS & SIGNAL BUS TRANSITION OVERLAY -->
+    <div id="bus-transition-overlay" class="fixed inset-0 z-[90] bg-obsidian-950/65 flex items-center justify-center p-4">
+        <div id="bus-transition-card" class="relative z-10 max-w-md w-full rounded-[32px] bg-white/10 dark:bg-obsidian-900/75 border border-white/25 p-7 text-center space-y-3 font-mono backdrop-blur-2xl">
+            <div class="flex items-center justify-between text-[11px] text-slate-300 border-b border-white/15 pb-2.5">
+                <span class="flex items-center gap-1.5 text-copper-400 font-semibold">
+                    <span class="w-2 h-2 rounded-full bg-copper-400 animate-ping"></span>
+                    LIQUID GLASS OPTICAL ROUTER
+                </span>
+                <span id="bus-target-addr" class="text-solder-400">ADDR: 0x4008_00</span>
+            </div>
+
+            <div class="py-2">
+                <div class="text-[11px] uppercase tracking-widest text-slate-300 mb-1">LOCKING DESTINATION NODE</div>
+                <div id="bus-target-title" class="font-display text-2xl font-bold text-white tracking-tight">
+                    01 // HARDWARE PROJECTS
+                </div>
+                <div id="bus-freq-counter" class="text-xs text-signal-400 mt-1">
+                    PLL SYNTH: 160.00 MHz ──► LOCKED
+                </div>
+            </div>
+
+            <div class="w-full h-2 rounded-full bg-obsidian-950/80 overflow-hidden border border-white/15">
+                <div id="bus-progress-fill" class="h-full rounded-full bg-gradient-to-r from-copper-500 via-solder-400 to-signal-400 transition-all duration-500 w-0"></div>
+            </div>
+
+            <div class="flex justify-between text-[10px] text-slate-400 pt-1">
+                <span>SIDHARTH K V // SYSTEM BUS</span>
+                <span class="text-solder-400">CRC32: VALID</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Edit Mode Banner -->
+    <div id="edit-mode-banner" class="hidden bg-gradient-to-r from-copper-600 via-amber-500 to-solder-600 text-obsidian-950 font-mono text-xs sm:text-sm py-2 px-4 sticky top-0 z-50 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-2">
+            <div class="flex items-center gap-2 font-semibold">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-obsidian-950 animate-ping"></span>
+                <span>LIVE CUSTOMIZE MODE ACTIVE: Click highlighted text to edit directly, add projects/certificates, or update social links.</span>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="openLinksEditorModal()" class="px-3 py-1 rounded-full bg-obsidian-950 text-copper-400 hover:bg-obsidian-800 font-semibold transition">
+                    Edit Social Links
+                </button>
+                <button onclick="resetPortfolioData()" class="px-3 py-1 rounded-full bg-obsidian-950/20 hover:bg-obsidian-950/30 text-obsidian-950 font-semibold transition">
+                    Reset Defaults
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STICKY NAVIGATION BAR -->
+    <header class="liquid-nav sticky top-0 z-40 transition-colors">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-3">
+            <a href="#hero" onclick="triggerNavTransition(event, '#hero', '00 // SYSTEM OVERVIEW', '0x4000_HERO')" class="flex items-center gap-3 group focus:outline-none magnetic-btn px-2 py-1">
+                <div class="w-10 h-10 rounded-full bg-obsidian-900 border-2 border-copper-500/70 flex items-center justify-center relative shadow-inner group-hover:border-solder-400 transition overflow-hidden">
+                    <img src="IMG20240223092712.jpg" alt="SIDHARTH K V" class="sync-portrait-img engineer-portrait-img" onerror="handlePortraitFallback(this)">
+                    <div class="absolute inset-0 portrait-vignette pointer-events-none opacity-40"></div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-display font-bold text-sm sm:text-base tracking-tight text-slate-900 dark:text-white flex items-center gap-1.5">
+                        SIDHARTH K V <span class="text-copper-500 font-mono">//</span> <span class="text-solder-600 dark:text-solder-400 font-mono text-xs sm:text-sm">HARDWARE</span>
+                    </span>
+                    <span class="font-mono text-[10px] text-slate-500 dark:text-slate-400 hidden sm:inline">REV 2026.10 • KICAD-10 / ESP32 / DSP</span>
+                </div>
+            </a>
+
+            <!-- iOS 26 Capsule Navigation Bar -->
+            <nav class="hidden lg:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/5 border border-white/15 backdrop-blur-xl font-mono text-xs uppercase tracking-wider text-slate-600 dark:text-slate-200">
+                <a href="#projects" onclick="triggerNavTransition(event, '#projects', '01 // HARDWARE PROJECTS', '0x4008_PROJ')" data-scramble="01.Projects" class="px-3 py-1 rounded-full hover:bg-white/10 hover:text-copper-400 transition magnetic-btn">01.Projects</a>
+                <a href="#lab-stack" onclick="triggerNavTransition(event, '#lab-stack', '02 // LAB STACK &amp; EDA', '0x4010_LABS')" data-scramble="02.Lab_Stack" class="px-3 py-1 rounded-full hover:bg-white/10 hover:text-copper-400 transition magnetic-btn">02.Lab_Stack</a>
+                <a href="#certifications" onclick="triggerNavTransition(event, '#certifications', '03 // CREDENTIALS', '0x4018_CERT')" data-scramble="03.Credentials" class="px-3 py-1 rounded-full hover:bg-white/10 hover:text-copper-400 transition magnetic-btn">03.Credentials</a>
+                <a href="#leadership" onclick="triggerNavTransition(event, '#leadership', '04 // LEADERSHIP &amp; TIMELINE', '0x4020_LEAD')" data-scramble="04.Leadership" class="px-3 py-1 rounded-full hover:bg-white/10 hover:text-copper-400 transition magnetic-btn">04.Leadership</a>
+                <a href="#contact" onclick="triggerNavTransition(event, '#contact', '05 // SERIAL LINK CONTACT', '0x4028_UART')" data-scramble="05.Contact" class="px-3 py-1 rounded-full hover:bg-white/10 hover:text-copper-400 transition magnetic-btn">05.Contact</a>
+            </nav>
+
+            <!-- Action Controls -->
+            <div class="flex items-center gap-1.5 sm:gap-2">
+                <button id="fx-toggle-btn" onclick="toggleTransitionFX()" class="liquid-press px-3 py-1.5 rounded-full font-mono text-[11px] font-semibold border border-solder-500/40 bg-solder-500/15 text-solder-400 hover:border-copper-500 flex items-center gap-1 transition">
+                    <i data-lucide="zap" class="w-3.5 h-3.5"></i>
+                    <span id="fx-toggle-label">FX: ON</span>
+                </button>
+
+                <button onclick="replayBootSequence()" class="liquid-press hidden xl:flex px-3 py-1.5 rounded-full font-mono text-[11px] font-medium border border-white/20 bg-white/10 text-slate-200 hover:border-copper-500 items-center gap-1 transition">
+                    <i data-lucide="terminal" class="w-3.5 h-3.5 text-copper-400"></i>
+                    <span>Boot</span>
+                </button>
+
+                <button id="edit-mode-btn" onclick="toggleEditMode()" class="liquid-press px-3 py-1.5 rounded-full font-mono text-xs font-medium border border-white/20 bg-white/10 text-slate-200 hover:border-copper-400 flex items-center gap-1.5 transition">
+                    <i data-lucide="sliders" class="w-3.5 h-3.5 text-copper-400"></i>
+                    <span id="edit-mode-label" class="hidden md:inline">Customize</span>
+                </button>
+
+                <button onclick="exportCustomizedHTML()" class="liquid-press px-3 py-1.5 rounded-full font-mono text-xs font-semibold bg-solder-500/15 border border-solder-500/40 text-solder-400 hover:bg-solder-500 hover:text-obsidian-950 flex items-center gap-1.5 transition">
+                    <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                    <span class="hidden md:inline">Export</span>
+                </button>
+
+                <button id="theme-toggle-btn" onclick="toggleTheme()" class="liquid-press p-2 rounded-full border border-white/20 bg-white/10 text-amber-400 hover:border-copper-500 transition" aria-label="Toggle Theme">
+                    <i id="theme-icon-light" data-lucide="sun" class="w-4 h-4 hidden"></i>
+                    <i id="theme-icon-dark" data-lucide="moon" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6">
+
+        <!-- HERO SECTION -->
+        <section id="hero" class="py-10 sm:py-14 lg:py-16 relative liquid-hero">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+                <div class="lg:col-span-7 space-y-6">
+                    <!-- Top Status Capsule Badges -->
+                    <div class="flex flex-wrap items-center gap-2">
+                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-solder-500/15 text-solder-400 border border-solder-500/35">
+                            <span class="w-2 h-2 rounded-full bg-solder-400 animate-pulse"></span>
+                            <span class="editable-field" data-key="badge1">B.Tech ECE @ SNGCE</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-copper-500/15 text-copper-400 border border-copper-500/35">
+                            <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                            <span class="editable-field" data-key="badge2">Vice Chair — IEEE SPS SBC</span>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-mono font-medium bg-signal-500/15 text-signal-400 border border-signal-500/35">
+                            <i data-lucide="award" class="w-3.5 h-3.5"></i>
+                            <span class="editable-field" data-key="badge3">3x NPTEL Certified (2x Elite)</span>
+                        </span>
+                    </div>
+
+                    <!-- ENGINEER IDENTITY IC MODULE + NAME HEADER -->
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5 sm:gap-6">
+                        <div class="relative shrink-0 mx-auto sm:mx-0">
+                            <div class="qfp-pin-row px-5 -mb-0.5">
+                                <span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span>
+                            </div>
+
+                            <div class="flex items-center">
+                                <div class="flex flex-col justify-evenly h-40 -mr-0.5 space-y-2">
+                                    <span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span>
+                                </div>
+
+                                <div id="hero-portrait-frame" class="ic-package-frame optics-optical w-44 h-48 sm:w-48 sm:h-52 p-2 relative group select-none">
+                                    <span class="absolute top-3 left-3 w-2.5 h-2.5 rounded-full bg-copper-400 ring-4 ring-copper-500/30 z-20"></span>
+
+                                    <button type="button" onclick="togglePortraitTuner()" class="liquid-press absolute top-2.5 right-2.5 z-20 p-2 rounded-full bg-obsidian-950/80 hover:bg-copper-500 text-slate-200 hover:text-obsidian-950 border border-white/20 transition" title="Adjust Portrait Framing or Bundle Photo">
+                                        <i data-lucide="camera" class="w-3.5 h-3.5"></i>
+                                    </button>
+
+                                    <div class="w-full h-full rounded-[22px] overflow-hidden relative bg-obsidian-950 border border-white/15">
+                                        <img id="hero-portrait-img" src="IMG20240223092712.jpg" alt="SIDHARTH K V" class="sync-portrait-img engineer-portrait-img" onerror="handlePortraitFallback(this)">
+                                        <div class="absolute inset-0 portrait-vignette pointer-events-none"></div>
+                                        <div class="absolute bottom-2 inset-x-2 px-2.5 py-1 rounded-full bg-obsidian-950/80 backdrop-blur-md border border-white/15 flex items-center justify-between font-mono text-[9px] text-slate-200 z-10">
+                                            <span class="text-copper-400 font-semibold">IC: SKV-ECE</span>
+                                            <span class="text-solder-400 flex items-center gap-1">
+                                                <span class="w-1.5 h-1.5 rounded-full bg-solder-400 animate-ping"></span>
+                                                VERIFIED
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="flex flex-col justify-evenly h-40 -ml-0.5 space-y-2">
+                                    <span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span><span class="qfp-pin-h"></span>
+                                </div>
+                            </div>
+
+                            <div class="qfp-pin-row px-5 -mt-0.5">
+                                <span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span><span class="qfp-pin-v"></span>
+                            </div>
+
+                            <div class="mt-2.5 flex items-center justify-center gap-1 bg-white/10 p-1 rounded-full border border-white/20 backdrop-blur-xl font-mono text-[9px]">
+                                <button type="button" onclick="setPortraitOptics('optical')" id="optics-btn-optical" class="px-2.5 py-1 rounded-full bg-copper-500 text-obsidian-950 font-bold transition">OPTICAL</button>
+                                <button type="button" onclick="setPortraitOptics('phosphor')" id="optics-btn-phosphor" class="px-2.5 py-1 rounded-full text-slate-300 hover:text-solder-400 transition">PHOSPHOR</button>
+                                <button type="button" onclick="setPortraitOptics('mono')" id="optics-btn-mono" class="px-2.5 py-1 rounded-full text-slate-300 hover:text-signal-400 transition">MONO</button>
+                            </div>
+                        </div>
+
+                        <!-- Name & Headline (Strictly SIDHARTH K V) -->
+                        <div class="space-y-2.5 flex-1">
+                            <div class="font-mono text-xs uppercase tracking-widest text-copper-400 flex items-center gap-2">
+                                <span>DESIGNATOR: U1 // HARDWARE &amp; EMBEDDED ENGINEER</span>
+                            </div>
+                            <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-none">
+                                <span class="editable-field" data-key="fullName" data-scramble="SIDHARTH K V">SIDHARTH K V</span>
+                            </h1>
+                            <div class="font-mono text-xs text-slate-400 flex flex-wrap items-center gap-2 pt-0.5">
+                                <span class="px-2.5 py-0.5 rounded-full bg-white/10 text-copper-400 border border-copper-500/30">SYS_ID: SKV-ECE-2026</span>
+                                <span>•</span>
+                                <span class="text-slate-300 editable-field" data-key="heroTrack">GATE EC 2027 &amp; M.Tech Applied Electronics &amp; Instrumentation Track</span>
+                            </div>
+                            <h2 class="font-display text-base sm:text-lg font-semibold text-solder-400 pt-1 editable-field" data-key="heroTitle">
+                                Electronics &amp; Communication Engineering Undergrad | PCB Designer | Embedded &amp; Audio Hardware Developer
+                            </h2>
+                        </div>
+                    </div>
+
+                    <!-- Collapsible Portrait Framing & Photo Bundler Drawer -->
+                    <div id="portrait-tuner-drawer" class="hidden p-4 rounded-3xl bg-obsidian-900/90 border border-white/25 backdrop-blur-2xl shadow-xl space-y-3 font-mono text-xs">
+                        <div class="flex items-center justify-between border-b border-white/15 pb-2">
+                            <span class="font-bold text-copper-400">PORTRAIT OPTICS &amp; BUNDLER</span>
+                            <button type="button" onclick="togglePortraitTuner()" class="text-slate-400 hover:text-white">✕</button>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                                    <span>ZOOM</span>
+                                    <span id="zoom-val-label" class="text-copper-400">1.42x</span>
+                                </div>
+                                <input id="portrait-zoom-slider" type="range" min="1.0" max="2.2" step="0.02" value="1.42" oninput="updatePortraitFraming()" class="w-full accent-amber-500 cursor-pointer">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                                    <span>PAN X</span>
+                                    <span id="panx-val-label" class="text-solder-400">48%</span>
+                                </div>
+                                <input id="portrait-panx-slider" type="range" min="10" max="90" step="1" value="48" oninput="updatePortraitFraming()" class="w-full accent-emerald-500 cursor-pointer">
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-[10px] text-slate-400 mb-1">
+                                    <span>PAN Y</span>
+                                    <span id="pany-val-label" class="text-signal-400">22%</span>
+                                </div>
+                                <input id="portrait-pany-slider" type="range" min="5" max="75" step="1" value="22" oninput="updatePortraitFraming()" class="w-full accent-cyan-400 cursor-pointer">
+                            </div>
+                        </div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-white/15">
+                            <span class="text-[11px] text-slate-300">Bundle <code class="text-copper-400">IMG20240223092712.jpg</code> into HTML:</span>
+                            <label class="liquid-press px-4 py-1.5 rounded-full bg-copper-500 text-obsidian-950 font-bold cursor-pointer">
+                                <span>Upload Photo</span>
+                                <input type="file" accept="image/*" onchange="handlePortraitUpload(event)" class="hidden">
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Bio -->
+                    <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl editable-field" data-key="heroBio">
+                        Hardware-first Electronics &amp; Communication Engineering undergraduate at Sree Narayana Gurukulam College of Engineering (SNGCE) specializing in mixed-signal multi-layer PCB layout (<span class="font-mono text-copper-400">KiCad 10</span>), embedded systems architecture (<span class="font-mono text-solder-400">ESP32 / 8051</span>), high-efficiency Class-D audio amplification &amp; active crossover networks, real-time DSP, and parametric 3D enclosure design (<span class="font-mono text-signal-400">Onshape</span>).
+                    </p>
+
+                    <!-- Telemetry Stats Squircle Tile -->
+                    <div class="grid grid-cols-3 gap-3 sm:gap-4 p-4 card-hardware reveal-item">
+                        <div class="border-r border-white/15 pr-2">
+                            <div class="font-mono text-xl sm:text-2xl font-bold text-copper-400 editable-field" data-key="stat1Val">6+</div>
+                            <div class="font-mono text-[11px] sm:text-xs text-slate-400 editable-field" data-key="stat1Label">Hardware Builds &amp; PCBs</div>
+                        </div>
+                        <div class="border-r border-white/15 px-2">
+                            <div class="font-mono text-xl sm:text-2xl font-bold text-solder-400 editable-field" data-key="stat2Val">3 NPTEL</div>
+                            <div class="font-mono text-[11px] sm:text-xs text-slate-400 editable-field" data-key="stat2Label">2x Elite IIT Credentials</div>
+                        </div>
+                        <div class="pl-2">
+                            <div class="font-mono text-xl sm:text-2xl font-bold text-signal-400 editable-field" data-key="stat3Val">Vice Chair</div>
+                            <div class="font-mono text-[11px] sm:text-xs text-slate-400 editable-field" data-key="stat3Label">IEEE SPS SBC SNGCE</div>
+                        </div>
+                    </div>
+
+                    <!-- Primary iOS 26 Capsule CTAs (Including All 3 Certificate Quick-Launchers) -->
+                    <div class="flex flex-wrap items-center gap-2.5 pt-1">
+                        <a href="#projects" onclick="triggerNavTransition(event, '#projects', '01 // HARDWARE PROJECTS', '0x4008_PROJ')" class="magnetic-btn liquid-press px-5 py-3 rounded-full font-mono text-xs sm:text-sm font-semibold bg-gradient-to-r from-copper-500 to-amber-400 text-obsidian-950 flex items-center gap-2">
+                            <i data-lucide="layers" class="w-4 h-4"></i>
+                            <span data-scramble="Explore Hardware Builds">Explore Hardware Builds</span>
+                        </a>
+                        <a href="certificate-control-systems.html" onclick="openCertificatePage(event, 'certificate-control-systems.html', 'NPTEL-26-CS')" class="magnetic-btn liquid-press px-4 py-3 rounded-full font-mono text-xs font-semibold bg-solder-500/20 hover:bg-solder-500 text-solder-400 hover:text-obsidian-950 border border-solder-500/50 flex items-center gap-1.5">
+                            <i data-lucide="award" class="w-4 h-4"></i>
+                            <span>★ Control Systems (Elite 64%)</span>
+                        </a>
+                        <a href="certificate-integrated-circuits.html" onclick="openCertificatePage(event, 'certificate-integrated-circuits.html', 'NPTEL-26-ICA')" class="magnetic-btn liquid-press px-4 py-3 rounded-full font-mono text-xs font-semibold bg-copper-500/20 hover:bg-copper-500 text-copper-400 hover:text-obsidian-950 border border-copper-500/50 flex items-center gap-1.5">
+                            <i data-lucide="award" class="w-4 h-4"></i>
+                            <span>★ Integrated Circuits (Elite 67%)</span>
+                        </a>
+                        <a href="certificate-digital-circuits.html" onclick="openCertificatePage(event, 'certificate-digital-circuits.html', 'NPTEL-25-DC')" class="magnetic-btn liquid-press px-4 py-3 rounded-full font-mono text-xs font-semibold bg-white/10 hover:bg-signal-400 text-slate-200 hover:text-obsidian-950 border border-white/25 flex items-center gap-1.5">
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-signal-400"></i>
+                            <span>Digital Circuits (53%)</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Column: Interactive Dual-Channel Hardware DSO -->
+                <div class="lg:col-span-5">
+                    <div class="card-hardware overflow-hidden relative p-1">
+                        <div class="bg-obsidian-950/90 px-5 py-3.5 rounded-t-[26px] border-b border-white/10 flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="pcb-via"></span>
+                                <span class="font-mono text-xs font-bold tracking-wider text-slate-200">SKV-DSO // MIXED-SIGNAL BENCH</span>
+                            </div>
+                            <div class="flex items-center gap-2 font-mono text-[11px]">
+                                <span id="dso-status-badge" class="px-2.5 py-0.5 rounded-full bg-solder-500/20 text-solder-400 border border-solder-500/30">TRIG'D</span>
+                                <span class="text-slate-400">100MSa/s</span>
+                            </div>
+                        </div>
+
+                        <div class="relative bg-[#040811] p-3">
+                            <canvas id="dso-canvas" class="w-full h-60 sm:h-64 rounded-2xl border border-slate-800/90 block cursor-crosshair"></canvas>
+
+                            <div class="absolute top-5 left-5 right-5 flex flex-wrap justify-between items-start pointer-events-none font-mono text-[11px] gap-2">
+                                <div class="space-y-0.5 bg-obsidian-950/80 px-3 py-1 rounded-2xl border border-copper-500/30 text-copper-400 backdrop-blur-md">
+                                    <div>CH1: <span id="ch1-label">TPA3116D2 Class-D Out</span></div>
+                                    <div class="text-[10px] text-slate-400">Vpp: <span id="ch1-vpp">24.8V</span> | Freq: <span id="ch1-freq">1.2kHz</span></div>
+                                </div>
+                                <div class="space-y-0.5 bg-obsidian-950/80 px-3 py-1 rounded-2xl border border-solder-500/30 text-solder-400 backdrop-blur-md">
+                                    <div>CH2: <span id="ch2-label">NE5532 Sub-Crossover</span></div>
+                                    <div class="text-[10px] text-slate-400">Phase: <span id="ch2-phase">0.0°</span> | SNR: <span>96dB</span></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="p-4 bg-obsidian-900/80 rounded-b-[26px] border-t border-white/10 space-y-3">
+                            <div class="flex flex-wrap items-center justify-between gap-2">
+                                <span class="font-mono text-[11px] text-slate-400 uppercase">Probe Test Point:</span>
+                                <div class="flex flex-wrap gap-1.5">
+                                    <button onclick="setDsoMode('audio')" id="mode-btn-audio" class="dso-mode-btn px-3 py-1 rounded-full font-mono text-[11px] bg-copper-500 text-obsidian-950 font-semibold">2.1 Class-D</button>
+                                    <button onclick="setDsoMode('i2s')" id="mode-btn-i2s" class="dso-mode-btn px-3 py-1 rounded-full font-mono text-[11px] bg-white/10 text-slate-300 border border-white/15">INMP441 I2S</button>
+                                    <button onclick="setDsoMode('lora')" id="mode-btn-lora" class="dso-mode-btn px-3 py-1 rounded-full font-mono text-[11px] bg-white/10 text-slate-300 border border-white/15">LoRa Chirp</button>
+                                    <button onclick="setDsoMode('failover')" id="mode-btn-failover" class="dso-mode-btn px-3 py-1 rounded-full font-mono text-[11px] bg-white/10 text-slate-300 border border-white/15">Dual-Batt MUX</button>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1">
+                                <div class="bg-obsidian-950/75 p-2.5 rounded-2xl border border-white/10">
+                                    <div class="flex justify-between font-mono text-[10px] text-slate-400 mb-1">
+                                        <span>TIMEBASE</span>
+                                        <span id="freq-readout" class="text-copper-400">2.0x</span>
+                                    </div>
+                                    <input id="dso-freq" type="range" min="0.5" max="5" step="0.1" value="2.0" class="w-full accent-amber-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                                </div>
+                                <div class="bg-obsidian-950/75 p-2.5 rounded-2xl border border-white/10">
+                                    <div class="flex justify-between font-mono text-[10px] text-slate-400 mb-1">
+                                        <span>GAIN</span>
+                                        <span id="amp-readout" class="text-solder-400">1.0x</span>
+                                    </div>
+                                    <input id="dso-amp" type="range" min="0.3" max="1.6" step="0.1" value="1.0" class="w-full accent-emerald-500 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                                </div>
+                                <div class="bg-obsidian-950/75 p-2.5 rounded-2xl border border-white/10">
+                                    <div class="flex justify-between font-mono text-[10px] text-slate-400 mb-1">
+                                        <span>NOISE</span>
+                                        <span id="noise-readout" class="text-signal-400">0.05</span>
+                                    </div>
+                                    <input id="dso-noise" type="range" min="0" max="0.6" step="0.05" value="0.05" class="w-full accent-cyan-400 cursor-pointer h-1.5 bg-slate-800 rounded-lg">
+                                </div>
+                                <div class="flex items-center justify-center bg-obsidian-950/75 p-2 rounded-2xl border border-white/10">
+                                    <button onclick="toggleDsoRun()" id="dso-run-btn" class="liquid-press w-full py-1.5 px-3 rounded-full font-mono text-xs font-semibold bg-solder-500/20 text-solder-400 border border-solder-500/40 hover:bg-solder-500 hover:text-obsidian-950 flex items-center justify-center gap-1">
+                                        <i data-lucide="pause" class="w-3.5 h-3.5"></i>
+                                        <span id="dso-run-text">HOLD</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. FEATURED HARDWARE & EMBEDDED PROJECTS -->
+        <section id="projects" class="py-14 sm:py-20">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-10">
+                <div>
+                    <div class="font-mono text-xs uppercase tracking-widest text-copper-400 flex items-center gap-2 mb-2">
+                        <span class="pcb-via"></span>
+                        <span>SECTION 01 // SCHEMATICS, SILICON &amp; PROTOTYPES</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+                        Featured Hardware &amp; Embedded Builds
+                    </h2>
+                </div>
+
+                <div class="flex flex-wrap items-center gap-2">
+                    <button onclick="filterProjects('All')" data-filter="All" class="proj-filter-btn px-4 py-2 rounded-full font-mono text-xs font-semibold bg-copper-500 text-obsidian-950">All [6]</button>
+                    <button onclick="filterProjects('Embedded & IoT')" data-filter="Embedded & IoT" class="proj-filter-btn px-4 py-2 rounded-full font-mono text-xs font-medium bg-white/10 text-slate-200 border border-white/20">Embedded &amp; IoT</button>
+                    <button onclick="filterProjects('Audio & Analog')" data-filter="Audio & Analog" class="proj-filter-btn px-4 py-2 rounded-full font-mono text-xs font-medium bg-white/10 text-slate-200 border border-white/20">Audio &amp; Analog</button>
+                    <button onclick="filterProjects('PCB & Hardware')" data-filter="PCB & Hardware" class="proj-filter-btn px-4 py-2 rounded-full font-mono text-xs font-medium bg-white/10 text-slate-200 border border-white/20">PCB &amp; Hardware</button>
+                    <button onclick="openAddProjectModal()" class="liquid-press px-4 py-2 rounded-full font-mono text-xs font-semibold bg-solder-500/20 text-solder-400 border border-solder-500/40 flex items-center gap-1.5">
+                        <i data-lucide="plus-circle" class="w-3.5 h-3.5"></i>
+                        <span>+ Add Build</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+        </section>
+
+        <!-- 4. LAB STACK & TECHNICAL ARSENAL -->
+        <section id="lab-stack" class="py-14 sm:py-20 border-t border-white/10">
+            <div class="mb-10">
+                <div class="font-mono text-xs uppercase tracking-widest text-solder-400 flex items-center gap-2 mb-2">
+                    <span class="pcb-via"></span>
+                    <span>SECTION 02 // EDA, SILICON &amp; BENCH INSTRUMENTATION</span>
+                </div>
+                <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+                        Lab Stack &amp; Technical Arsenal
+                    </h2>
+                    <p class="font-mono text-xs text-slate-400">
+                        SCHEMATIC CAPTURE → SPICE SIM → PCB LAYOUT → FIRMWARE → 3D ENCLOSURE
+                    </p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="card-hardware p-6 relative overflow-hidden reveal-item">
+                    <div class="flex items-start justify-between gap-4 mb-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-copper-500/15 border border-copper-500/40 flex items-center justify-center text-copper-400">
+                                <i data-lucide="cpu" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="font-mono text-[10px] uppercase tracking-wider text-copper-400">SUBSYSTEM A // CAD &amp; LAYOUT</span>
+                                <h3 class="font-display text-xl font-bold text-white">EDA &amp; Mechanical CAD</h3>
+                            </div>
+                        </div>
+                        <span class="font-mono text-xs px-3 py-1 rounded-full bg-white/10 text-slate-200 border border-white/15">DRC CLEAN</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div class="p-4 rounded-2xl bg-obsidian-950/60 border border-white/10">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-mono font-bold text-sm text-white">KiCad 10</span>
+                                <span class="font-mono text-xs text-solder-400">Primary PCB EDA</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-300 editable-field" data-key="skillKicad">
+                                Hierarchical schematic capture, custom footprint &amp; symbol creation, mixed-signal ground plane partitioning, impedance/power trace sizing, Design Rule Checking (DRC), and fabrication-ready Gerber/drill generation.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-2xl bg-obsidian-950/60 border border-white/10">
+                            <div class="flex items-center justify-between mb-1">
+                                <span class="font-mono font-bold text-sm text-white">Onshape 3D CAD</span>
+                                <span class="font-mono text-xs text-copper-400">Parametric Enclosures</span>
+                            </div>
+                            <p class="text-xs sm:text-sm text-slate-300 editable-field" data-key="skillOnshape">
+                                Parametric 3D mechanical modeling for custom hardware enclosures, PCB standoffs, acoustic amplifier chassis, and panel-mount cutouts integrated with STEP board exports.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-hardware p-6 relative overflow-hidden reveal-item">
+                    <div class="flex items-start justify-between gap-4 mb-5">
+                        <div class="flex items-center gap-3">
+                            <div class="w-11 h-11 rounded-2xl bg-solder-500/15 border border-solder-500/40 flex items-center justify-center text-solder-400">
+                                <i data-lucide="activity" class="w-6 h-6"></i>
+                            </div>
+                            <div>
+                                <span class="font-mono text-[10px] uppercase tracking-wider text-solder-400">SUBSYSTEM B // VERIFICATION &amp; IDE</span>
+                                <h3 class="font-display text-xl font-bold text-white">Simulation &amp; Programming</h3>
+                            </div>
+                        </div>
+                        <span class="font-mono text-xs px-3 py-1 rounded-full bg-white/10 text-slate-200 border border-white/15">SPICE / DSP</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div class="p-3.5 rounded-2xl bg-obsidian-950/60 border border-white/10">
+                            <div class="font-mono font-bold text-xs sm:text-sm text-copper-400 mb-1">LTspice</div>
+                            <p class="text-xs text-slate-300">Analog filter frequency response (Bode plots), op-amp gain stages, &amp; dual-battery power multiplexing transient analysis.</p>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-obsidian-950/60 border border-white/10">
+                            <div class="font-mono font-bold text-xs sm:text-sm text-solder-400 mb-1">MATLAB &amp; Python</div>
+                            <p class="text-xs text-slate-300">Digital Signal Processing (DSP), transfer function modeling, root-locus &amp; Bode stability analysis for Control Systems.</p>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-obsidian-950/60 border border-white/10">
+                            <div class="font-mono font-bold text-xs sm:text-sm text-signal-400 mb-1">Keil µVision &amp; Proteus</div>
+                            <p class="text-xs text-slate-300">8051 (AT89C51) Assembly &amp; Embedded C development with cycle-accurate peripheral &amp; logic simulation.</p>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-obsidian-950/60 border border-white/10">
+                            <div class="font-mono font-bold text-xs sm:text-sm text-purple-400 mb-1">ResimIDE &amp; VS Code</div>
+                            <p class="text-xs text-slate-300">Hardware simulation (IEEE CASS) &amp; ESP-IDF / Arduino firmware engineering in C/C++.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. CERTIFICATIONS & TECHNICAL TRAINING -->
+        <section id="certifications" class="py-14 sm:py-20 border-t border-white/10">
+            <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+                <div>
+                    <div class="font-mono text-xs uppercase tracking-widest text-copper-400 flex items-center gap-2 mb-2">
+                        <span class="pcb-via"></span>
+                        <span>SECTION 03 // CLICK ANY NPTEL CARD TO LAUNCH DEDICATED CREDENTIAL WEBPAGE</span>
+                    </div>
+                    <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+                        Certifications &amp; Technical Training
+                    </h2>
+                </div>
+                <button onclick="openAddCertModal()" class="liquid-press self-start sm:self-auto px-4 py-2 rounded-full font-mono text-xs font-semibold bg-copper-500/20 text-copper-400 border border-copper-500/40 flex items-center gap-1.5">
+                    <i data-lucide="file-plus" class="w-3.5 h-3.5"></i>
+                    <span>+ Add Credential</span>
+                </button>
+            </div>
+
+            <div id="certifications-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </section>
+
+        <!-- 6. LEADERSHIP & ACADEMIC TIMELINE -->
+        <section id="leadership" class="py-14 sm:py-20 border-t border-white/10">
+            <div class="mb-12">
+                <div class="font-mono text-xs uppercase tracking-widest text-solder-400 flex items-center gap-2 mb-2">
+                    <span class="pcb-via"></span>
+                    <span>SECTION 04 // IEEE LEADERSHIP, ACADEMICS &amp; OUTREACH</span>
+                </div>
+                <h2 class="font-display text-3xl sm:text-4xl font-bold text-slate-900 dark:text-white">
+                    Leadership &amp; Academic Timeline
+                </h2>
+            </div>
+
+            <div class="relative pl-6 sm:pl-10 border-l-2 border-copper-500/40 space-y-8">
+                <div class="relative group">
+                    <span class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-obsidian-950 border-2 border-solder-500 flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-solder-400"></span>
+                    </span>
+                    <div class="card-hardware p-6 reveal-item">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="font-mono text-xs font-semibold px-3 py-1 rounded-full bg-solder-500/15 text-solder-400 border border-solder-500/30">2026 – PRESENT • ACTIVE ROLE</span>
+                            <span class="font-mono text-xs text-slate-400">IEEE SNGCE Student Branch</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-white">Vice Chair — IEEE Signal Processing Society (SPS) Student Branch Chapter, SNGCE</h3>
+                        <p class="text-sm text-slate-300 mt-2">Spearheading technical workshops, hands-on DSP/embedded hardware sessions, and student engineering initiatives within the IEEE Signal Processing Society chapter at Sree Narayana Gurukulam College of Engineering.</p>
+                    </div>
+                </div>
+
+                <div class="relative group">
+                    <span class="absolute -left-[31px] sm:-left-[47px] top-1.5 w-5 h-5 rounded-full bg-obsidian-950 border-2 border-copper-500 flex items-center justify-center">
+                        <span class="w-2 h-2 rounded-full bg-copper-400"></span>
+                    </span>
+                    <div class="card-hardware p-6 reveal-item">
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
+                            <span class="font-mono text-xs font-semibold px-3 py-1 rounded-full bg-copper-500/15 text-copper-400 border border-copper-500/30">SEPTEMBER 2026 • EXPO SHOWCASE</span>
+                            <span class="font-mono text-xs text-slate-400">St. Mary's HSS, Iringole</span>
+                        </div>
+                        <h3 class="font-display text-xl font-bold text-white">Technical Presenter — Silver Quest Tech Expo, Iringole</h3>
+                        <p class="text-sm text-slate-300 mt-2">Demonstrated the LoRa-Based Wildlife Alerting &amp; Early Warning System hardware prototype alongside collaborators Kiran Sivanandan and Harishankar V B.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. CONTACT SECTION -->
+        <section id="contact" class="py-14 sm:py-20 border-t border-white/10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
+                <div class="lg:col-span-6 space-y-6">
+                    <div>
+                        <div class="font-mono text-xs uppercase tracking-widest text-copper-400 flex items-center gap-2 mb-2">
+                            <span class="pcb-via"></span>
+                            <span>SECTION 05 // SERIAL LINK &amp; COLLABORATION DISPATCH</span>
+                        </div>
+                        <h2 class="font-display text-3xl sm:text-4xl font-bold text-white">Initiate Hardware Collaboration</h2>
+                    </div>
+
+                    <div class="card-hardware p-6 space-y-4">
+                        <div class="flex items-center justify-between gap-3 pb-3 border-b border-white/15">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-full overflow-hidden border-2 border-copper-500/60 bg-obsidian-950 relative shrink-0">
+                                    <img src="IMG20240223092712.jpg" alt="SIDHARTH K V" class="sync-portrait-img engineer-portrait-img" onerror="handlePortraitFallback(this)">
+                                </div>
+                                <div>
+                                    <div class="font-display font-bold text-base text-white">SIDHARTH K V</div>
+                                    <div class="font-mono text-[11px] text-solder-400">B.Tech ECE @ SNGCE • Vice Chair, IEEE SPS SBC</div>
+                                </div>
+                            </div>
+                            <span class="font-mono text-[10px] px-3 py-1 rounded-full bg-copper-500/15 text-copper-400 border border-copper-500/30">ID: SKV-ECE</span>
+                        </div>
+
+                        <div class="flex items-center justify-between gap-3 flex-wrap">
+                            <div>
+                                <div class="font-mono text-[10px] uppercase text-slate-400">DIRECT ELECTRONIC MAIL</div>
+                                <div id="contact-email-display" class="font-mono text-sm sm:text-base font-semibold text-white">sidharthkv.ece@ieee.org</div>
+                            </div>
+                            <button onclick="copyEmailToClipboard()" class="liquid-press px-4 py-2 rounded-full font-mono text-xs font-semibold bg-white/10 hover:bg-copper-500 hover:text-obsidian-950 text-slate-200 border border-white/20 flex items-center gap-1.5">
+                                <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+                                <span id="copy-email-btn-text">Copy Email</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <a id="link-github" href="https://github.com/sidharthkv" target="_blank" rel="noopener noreferrer" class="card-hardware p-4 flex flex-col justify-between gap-2 group">
+                            <i data-lucide="github" class="w-5 h-5 text-slate-300 group-hover:text-copper-400"></i>
+                            <div>
+                                <div class="font-mono text-xs font-bold text-white">GitHub</div>
+                                <div class="font-mono text-[10px] text-slate-400">Repos &amp; KiCad</div>
+                            </div>
+                        </a>
+                        <a id="link-linkedin" href="https://www.linkedin.com/in/sidharth-k-v" target="_blank" rel="noopener noreferrer" class="card-hardware p-4 flex flex-col justify-between gap-2 group">
+                            <i data-lucide="linkedin" class="w-5 h-5 text-slate-300 group-hover:text-signal-400"></i>
+                            <div>
+                                <div class="font-mono text-xs font-bold text-white">LinkedIn</div>
+                                <div class="font-mono text-[10px] text-slate-400">Network</div>
+                            </div>
+                        </a>
+                        <a id="link-email" href="mailto:sidharthkv.ece@ieee.org" class="card-hardware p-4 flex flex-col justify-between gap-2 group">
+                            <i data-lucide="send" class="w-5 h-5 text-slate-300 group-hover:text-solder-400"></i>
+                            <div>
+                                <div class="font-mono text-xs font-bold text-white">Email</div>
+                                <div class="font-mono text-[10px] text-slate-400">Dispatch</div>
+                            </div>
+                        </a>
+                        <button onclick="downloadEngineeringDossier()" class="card-hardware p-4 flex flex-col justify-between gap-2 text-left group">
+                            <i data-lucide="file-spreadsheet" class="w-5 h-5 text-copper-400"></i>
+                            <div>
+                                <div class="font-mono text-xs font-bold text-copper-400">Dossier</div>
+                                <div class="font-mono text-[10px] text-slate-400">Download .TXT</div>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Contact Form -->
+                <div class="lg:col-span-6">
+                    <div class="card-hardware p-6 sm:p-8">
+                        <div class="flex items-center justify-between mb-6 pb-3 border-b border-white/15">
+                            <div class="font-mono text-xs font-bold text-white flex items-center gap-2">
+                                <i data-lucide="terminal" class="w-4 h-4 text-solder-400"></i>
+                                <span>TRANSMIT MESSAGE PACKET // UART_TX</span>
+                            </div>
+                            <span class="font-mono text-[11px] text-slate-400">115200 BAUD</span>
+                        </div>
+
+                        <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <input type="text" id="form-name" required placeholder="SENDER_NAME *" class="w-full px-4 py-3 rounded-2xl bg-obsidian-950/70 border border-white/15 text-sm text-white font-mono">
+                                <input type="email" id="form-email" required placeholder="RETURN_EMAIL *" class="w-full px-4 py-3 rounded-2xl bg-obsidian-950/70 border border-white/15 text-sm text-white font-mono">
+                            </div>
+                            <select id="form-subject" class="w-full px-4 py-3 rounded-2xl bg-obsidian-950/70 border border-white/15 text-sm text-white font-mono">
+                                <option value="Hardware / PCB Design Collaboration">Hardware / PCB Design Collaboration</option>
+                                <option value="Embedded Systems / Internship Opportunity">Embedded Systems / Internship Opportunity</option>
+                                <option value="Class-D Audio / Analog Engineering Inquiry">Class-D Audio / Analog Engineering Inquiry</option>
+                            </select>
+                            <textarea id="form-message" rows="4" required placeholder="Describe your hardware project or inquiry..." class="w-full px-4 py-3 rounded-2xl bg-obsidian-950/70 border border-white/15 text-sm text-white font-mono"></textarea>
+                            <button type="submit" class="liquid-press w-full py-3.5 px-6 rounded-full font-mono text-xs sm:text-sm font-bold bg-gradient-to-r from-copper-500 to-amber-400 text-obsidian-950 flex items-center justify-center gap-2">
+                                <i data-lucide="zap" class="w-4 h-4"></i>
+                                <span>TRANSMIT PACKET &amp; COPY DISPATCH</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-white/10 bg-obsidian-950/80 py-8 mt-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 font-mono text-xs text-slate-400">
+            <div class="flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-solder-500 animate-pulse"></span>
+                <span>© 2026 SIDHARTH K V • PIRAVOM, KERALA, INDIA</span>
+            </div>
+            <div>B.TECH ECE @ SNGCE • VICE CHAIR, IEEE SPS SBC</div>
+        </div>
+    </footer>
+
+    <!-- PROJECT DATASHEET MODAL -->
+    <div id="project-modal" class="fixed inset-0 z-50 hidden bg-obsidian-950/80 backdrop-blur-2xl flex items-center justify-center p-4 overflow-y-auto">
+        <div class="card-hardware max-w-4xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6">
+            <div class="flex items-center justify-between gap-4 border-b border-white/15 pb-4">
+                <div>
+                    <div id="modal-category" class="font-mono text-[11px] uppercase tracking-wider text-copper-400">DATASHEET &amp; ARCHITECTURE SPEC</div>
+                    <h3 id="modal-title" class="font-display text-xl sm:text-2xl font-bold text-white">Project Name</h3>
+                </div>
+                <button onclick="closeProjectModal()" class="liquid-press p-2.5 rounded-full bg-white/10 text-white border border-white/20">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-3 bg-obsidian-950/70 p-4 rounded-2xl border border-white/10">
+                <div id="modal-stack" class="flex flex-wrap gap-1.5"></div>
+                <div id="modal-collab" class="font-mono text-xs text-solder-400"></div>
+            </div>
+            <p id="modal-description" class="text-slate-200 text-sm sm:text-base leading-relaxed"></p>
+            <div id="modal-block-diagram" class="p-4 rounded-2xl bg-obsidian-950 border border-white/15 font-mono text-xs text-solder-400 overflow-x-auto whitespace-pre"></div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-4 rounded-2xl bg-obsidian-950/70 border border-white/10">
+                    <h4 class="font-mono text-xs uppercase text-solder-400 mb-3">KEY BILL OF MATERIALS (BOM)</h4>
+                    <ul id="modal-bom" class="space-y-2 font-mono text-xs text-slate-300"></ul>
+                </div>
+                <div class="p-4 rounded-2xl bg-obsidian-950/70 border border-white/10">
+                    <h4 class="font-mono text-xs uppercase text-signal-400 mb-3">DESIGN HIGHLIGHTS</h4>
+                    <ul id="modal-highlights" class="space-y-2 text-xs sm:text-sm text-slate-300"></ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+    <script>
+        const defaultPortfolioData = {
+            links: {
+                email: "sidharthkv.ece@ieee.org",
+                github: "https://github.com/sidharthkv",
+                linkedin: "https://www.linkedin.com/in/sidharth-k-v"
+            },
+            projects: [
+                {
+                    id: "credosync",
+                    designator: "PRJ-01 // SENSOR FUSION",
+                    title: "CredoSync — Automated Classroom Attendance & Mobile Device Management System",
+                    categories: ["Embedded & IoT", "PCB & Hardware"],
+                    stack: ["ESP32", "Capacitive Proximity Sensors", "Hall Effect Sensors", "Microswitches", "Embedded C"],
+                    collaborators: "Collaborator: Kiran Sivanandan",
+                    summary: "Smart multi-sensor slot detection architecture combining capacitive, magnetic hall-effect, and mechanical sensing to verify device presence and automate classroom attendance logging with zero false positives.",
+                    blockDiagram: `[Slot Array: Capacitive + Hall-Effect + Microswitch] ──► [ESP32 Dual-Core MCU] ──► [Real-Time Attendance Ledger]`,
+                    bom: ["MCU: ESP32-WROOM-32", "Capacitive Proximity Sensor", "Omnipolar Hall-Effect Sensor", "Snap-Action Microswitch"],
+                    highlights: ["Eliminates dummy-case spoofing via 3-factor physical verification.", "Hardware RC debouncing paired with ESP32 ISRs."]
+                },
+                {
+                    id: "classd-amp",
+                    designator: "PRJ-02 // MIXED-SIGNAL AUDIO",
+                    title: "Custom 2.1 Channel Class-D Audio Amplifier & Crossover Network",
+                    categories: ["Audio & Analog", "PCB & Hardware"],
+                    stack: ["Dual TPA3116D2", "NE5532 Op-Amps", "KiCad 10", "Onshape 3D CAD", "Active Crossover"],
+                    collaborators: "Solo Hardware & Enclosure Build",
+                    summary: "Custom mixed-signal PCB designed in KiCad 10 featuring dual TPA3116D2 Class-D power stages and low-noise NE5532 pre-amp/bass-management filtering, housed in a parametric 3D-modeled enclosure.",
+                    blockDiagram: `[Stereo Line Input] ──► [NE5532 Pre-Amp & Sub LPF] ──► [Dual TPA3116D2 Power Stages] ──► [2.1 Acoustic Output]`,
+                    bom: ["2x TI TPA3116D2 Class-D ICs", "TI NE5532 Low-Noise Op-Amps", "KiCad 10 Star-Ground PCB", "Onshape 3D Enclosure"],
+                    highlights: ["Separated quiet AGND from high-current Class-D PGND.", "Dedicated PBTL subwoofer stage."]
+                },
+                {
+                    id: "ws2812-dsp",
+                    designator: "PRJ-03 // REAL-TIME AUDIO DSP",
+                    title: "Sound-Reactive WS2812B Addressable LED Controller PCB",
+                    categories: ["PCB & Hardware", "Audio & Analog"],
+                    stack: ["ESP32-C3", "INMP441 Digital I2S Mic", "WS2812B", "KiCad 10", "Real-Time DSP"],
+                    collaborators: "Solo PCB & Firmware Design",
+                    summary: "Compact custom PCB integrating an ESP32-C3 microcontroller with a high-SNR INMP441 digital I2S omnidirectional microphone for low-latency frequency-reactive LED strip control.",
+                    blockDiagram: `[INMP441 24-bit I2S Mic] ──► [ESP32-C3 DMA + FFT] ──► [WS2812B Addressable LED Array]`,
+                    bom: ["Espressif ESP32-C3", "InvenSense INMP441 I2S MEMS Mic", "2-Layer KiCad 10 PCB", "WS2812B Array"],
+                    highlights: ["Direct digital I2S DMA transfers eliminate onboard ADC noise.", "Real-time FFT band decomposition at 60+ FPS."]
+                },
+                {
+                    id: "lora-wildlife",
+                    designator: "PRJ-04 // RF TELEMETRY & EDGE IOT",
+                    title: "LoRa-Based Wildlife Alerting & Early Warning System",
+                    categories: ["Embedded & IoT"],
+                    stack: ["LoRa RF Telemetry", "ESP32", "Edge Sensors", "Low-Power Mesh"],
+                    collaborators: "Collaborators: Kiran Sivanandan, Harishankar V B",
+                    summary: "Long-range, low-power perimeter monitoring and community alerting system designed for forest-border settlements. Exhibited at Silver Quest Tech Expo (Sept 2026).",
+                    blockDiagram: `[Perimeter Sensor Node] ──► [ESP32 + LoRa CSS RF Link] ──► [Village Gateway Siren & Alert]`,
+                    bom: ["ESP32 MCU", "Sub-GHz LoRa Transceiver", "Perimeter Sensor Array"],
+                    highlights: ["Operates independent of cellular coverage using LoRa CSS packets.", "Exhibited at Silver Quest Tech Expo, Iringole."]
+                },
+                {
+                    id: "sos-failover",
+                    designator: "PRJ-05 // MISSION-CRITICAL POWER",
+                    title: "Portable Emergency SOS Safety Device with Dual-Battery Failover",
+                    categories: ["Embedded & IoT", "PCB & Hardware"],
+                    stack: ["Automatic Power Multiplexing", "Dual-Battery Failover", "LTspice Verification"],
+                    collaborators: "Collaborator: Kiran Sivanandan",
+                    summary: "High-reliability portable personal safety hardware featuring seamless zero-drop primary-to-backup battery switchover circuitry for mission-critical SOS transmission.",
+                    blockDiagram: `[Primary Cell (BAT1)] + [Reserve Cell (BAT2)] ──► [MOSFET Power MUX] ──► [Zero-Brownout SOS Beacon]`,
+                    bom: ["Dual-Battery MOSFET Power MUX", "Primary + Reserve Li-Ion Cells", "LTspice Transient Verification"],
+                    highlights: ["Sub-microsecond failover prevents MCU brownout reset.", "Prioritized for personal safety hardware startup deployment."]
+                },
+                {
+                    id: "pk545-radio",
+                    designator: "PRJ-06 // RF DIAGNOSTICS & RESTORATION",
+                    title: "Vintage PowerTrick PK545 AM/FM Radio Receiver Restoration",
+                    categories: ["Audio & Analog"],
+                    stack: ["Sony CXA1619BS", "Philips TEA5711", "RF/IF Signal Tracing", "Analog Diagnostics"],
+                    collaborators: "Solo Component-Level Restoration",
+                    summary: "Component-level diagnosis, schematic reverse-engineering, and restoration of a classic AM/FM radio receiver board built around Sony CXA1619BS and Philips TEA5711 ICs.",
+                    blockDiagram: `[Antenna & RF Tank] ──► [Sony CXA1619BS / Philips TEA5711 IF Core] ──► [Audio Output Stage]`,
+                    bom: ["Sony CXA1619BS IC", "Philips TEA5711 IC", "Electrolytic Recapping"],
+                    highlights: ["Pin-by-pin datasheet signal tracing and IF alignment."]
+                }
+            ],
+            certifications: [
+                {
+                    id: "cert-control",
+                    code: "NPTEL-26-CS",
+                    title: "NPTEL Online Certification: Control Systems",
+                    issuer: "NPTEL • Indian Institute of Technology Madras",
+                    date: "Jul–Oct 2026 (Elite • 64% | Roll No: NPTEL26DE27S754700629)",
+                    badge: "★ ELITE • 64% (25/25 ASSIGNMENTS)",
+                    topics: "Mathematical modeling of physical systems, Transfer Functions, Block Diagrams, Routh-Hurwitz, Root Locus, Bode & Nyquist stability analysis, and State-Space design. (Online Assignments: 25/25 | Proctored Exam: 39/75 | 888 Candidates | 4 Credits).",
+                    verifyUrl: "certificate-control-systems.html",
+                    detailPage: "certificate-control-systems.html"
+                },
+                {
+                    id: "cert-integrated",
+                    code: "NPTEL-26-ICA",
+                    title: "NPTEL Online Certification: Integrated Circuits and Applications",
+                    issuer: "NPTEL • Indian Institute of Technology Guwahati",
+                    date: "Jan–Apr 2026 (Elite • 67% | Roll No: NPTEL26EE33S1154400163)",
+                    badge: "★ ELITE • 67% SCORE",
+                    topics: "Operational Amplifier (Op-Amp) linear & non-linear configurations, Active RC Filters, Oscillators, Precision Rectifiers, and Instrumentation Amplifiers. (Online Assignments: 23.88/25 | Proctored Exam: 43.5/75 | 201 Candidates | 4 Credits).",
+                    verifyUrl: "certificate-integrated-circuits.html",
+                    detailPage: "certificate-integrated-circuits.html"
+                },
+                {
+                    id: "cert-digital",
+                    code: "NPTEL-25-DC",
+                    title: "NPTEL Online Certification: Digital Circuits",
+                    issuer: "NPTEL • Indian Institute of Technology Kharagpur",
+                    date: "Jul–Oct 2025 (53% | Roll No: NPTEL25EE125S1155900740)",
+                    badge: "VERIFIED CREDENTIAL • 53%",
+                    topics: "Boolean Algebra, Karnaugh Maps, Combinational & Sequential Logic Design, Flip-Flops, Counters, Finite State Machines (FSM), and ADC/DAC fundamentals. (Online Assignments: 21.66/25 | Proctored Exam: 31.5/75 | 2,454 Candidates | 3 or 4 Credits).",
+                    verifyUrl: "certificate-digital-circuits.html",
+                    detailPage: "certificate-digital-circuits.html"
+                },
+                {
+                    id: "cert-ieeecass",
+                    code: "IEEE-CASS-26",
+                    title: "IEEE CASS Workshop: ResimIDE Hardware Simulation",
+                    issuer: "IEEE Circuits and Systems Society (CASS) • MITS",
+                    date: "July 2026",
+                    badge: "HANDS-ON WORKSHOP",
+                    topics: "Circuit modeling, hardware behavioral simulation, and system-level verification workflows using ResimIDE conducted at Muthoot Institute of Technology and Science (MITS).",
+                    verifyUrl: "#certifications"
+                }
+            ],
+            customText: {}
+        };
+
+        let portfolioData = JSON.parse(localStorage.getItem("skv_portfolio_v3")) || JSON.parse(JSON.stringify(defaultPortfolioData));
+        let activeFilter = "All";
+        let isEditMode = false;
+        let transitionFxEnabled = true;
+
+        function saveState() {
+            localStorage.setItem("skv_portfolio_v3", JSON.stringify(portfolioData));
+        }
+
+        function showToast(message) {
+            const container = document.getElementById("toast-container");
+            const toast = document.createElement("div");
+            toast.className = "pointer-events-auto flex items-center gap-2.5 px-4 py-3 rounded-full bg-obsidian-900/90 backdrop-blur-xl text-white border border-white/20 shadow-2xl font-mono text-xs transition-all duration-300";
+            toast.innerHTML = `<span class="w-2 h-2 rounded-full bg-solder-400"></span><span>${message}</span>`;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = "0";
+                setTimeout(() => toast.remove(), 300);
+            }, 3200);
+        }
+
+        function renderProjects() {
+            const grid = document.getElementById("projects-grid");
+            const filtered = activeFilter === "All"
+                ? portfolioData.projects
+                : portfolioData.projects.filter(p => p.categories.includes(activeFilter));
+
+            grid.innerHTML = filtered.map((proj, idx) => `
+                <article class="card-hardware reveal-item flex flex-col justify-between p-6 relative group" style="transition-delay: ${idx * 60}ms">
+                    <div>
+                        <div class="flex items-center justify-between gap-2 mb-3">
+                            <span class="font-mono text-[10px] uppercase tracking-wider px-3 py-1 rounded-full bg-obsidian-950/80 text-copper-400 border border-copper-500/30">
+                                ${proj.designator}
+                            </span>
+                            <div class="smd-pads">
+                                <span class="smd-pad"></span><span class="smd-pad"></span><span class="smd-pad"></span>
+                            </div>
+                        </div>
+
+                        <div class="h-10 mb-4 rounded-2xl bg-obsidian-950/80 border border-white/10 px-3 flex items-center justify-between overflow-hidden">
+                            <svg class="w-full h-6" viewBox="0 0 280 24" fill="none">
+                                <path d="M4 12 H55 L65 5 H125 L135 19 H195 L205 12 H276" stroke="#1e293b" stroke-width="1.4"/>
+                                <path class="hover-trace-line" d="M4 12 H55 L65 5 H125 L135 19 H195 L205 12 H276" stroke="#10b981" stroke-width="1.8"/>
+                                <circle cx="4" cy="12" r="2.5" fill="#f59e0b"/>
+                                <circle cx="276" cy="12" r="2.5" fill="#22d3ee"/>
+                            </svg>
+                        </div>
+
+                        <h3 class="font-display text-lg sm:text-xl font-bold text-white group-hover:text-copper-400 transition mb-2">
+                            ${proj.title}
+                        </h3>
+                        <p class="text-slate-300 text-xs sm:text-sm leading-relaxed mb-4">
+                            ${proj.summary}
+                        </p>
+                    </div>
+
+                    <div class="space-y-4 pt-3 border-t border-white/10">
+                        <div class="flex flex-wrap gap-1.5">
+                            ${proj.stack.map(tag => `
+                                <span class="font-mono text-[11px] px-2.5 py-0.5 rounded-full bg-white/5 text-slate-200 border border-white/15">
+                                    ${tag}
+                                </span>
+                            `).join('')}
+                        </div>
+
+                        <div class="flex items-center justify-between gap-2 pt-1">
+                            <span class="font-mono text-[11px] text-slate-400 truncate">${proj.collaborators}</span>
+                            <button onclick="triggerModalWithTransition('${proj.id}', '${proj.designator}')" class="magnetic-btn liquid-press shrink-0 px-4 py-2 rounded-full font-mono text-xs font-semibold bg-copper-500/20 hover:bg-copper-500 text-copper-400 hover:text-obsidian-950 border border-copper-500/40 flex items-center gap-1.5">
+                                <span>Architecture &amp; Specs</span>
+                                <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+
+            lucide.createIcons();
+            initInteractiveCardsAndObserver();
+        }
+
+        function filterProjects(category) {
+            activeFilter = category;
+            document.querySelectorAll(".proj-filter-btn").forEach(btn => {
+                if (btn.dataset.filter === category) {
+                    btn.className = "proj-filter-btn px-4 py-2 rounded-full font-mono text-xs font-semibold bg-copper-500 text-obsidian-950";
+                } else {
+                    btn.className = "proj-filter-btn px-4 py-2 rounded-full font-mono text-xs font-medium bg-white/10 text-slate-200 border border-white/20";
+                }
+            });
+            renderProjects();
+        }
+
+        function renderCertifications() {
+            const grid = document.getElementById("certifications-grid");
+            if (!grid) return;
+
+            grid.innerHTML = portfolioData.certifications.map((cert, idx) => `
+                <div ${cert.detailPage ? `onclick="openCertificatePage(event, '${cert.detailPage}', '${cert.code}')"` : ""} class="card-hardware reveal-item ${cert.detailPage ? 'cursor-pointer' : ''} p-6 flex flex-col justify-between relative group" style="transition-delay: ${idx * 70}ms">
+                    <div>
+                        <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                            <span class="font-mono text-[11px] font-bold px-3 py-1 rounded-full bg-copper-500/15 text-copper-400 border border-copper-500/35">
+                                ${cert.code}
+                            </span>
+                            <span class="font-mono text-[10px] px-3 py-1 rounded-full bg-solder-500/15 text-solder-400 border border-solder-500/35 flex items-center gap-1.5">
+                                <span class="w-1.5 h-1.5 rounded-full bg-solder-400 animate-ping"></span>
+                                ${cert.badge}
+                            </span>
+                        </div>
+
+                        <h3 class="font-display text-lg sm:text-xl font-bold text-white group-hover:text-copper-400 transition mb-1">
+                            ${cert.title}
+                        </h3>
+                        <div class="font-mono text-xs text-copper-400 mb-3">
+                            ${cert.issuer} • <span class="text-slate-400">${cert.date}</span>
+                        </div>
+
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed mb-4">
+                            ${cert.topics}
+                        </p>
+                    </div>
+
+                    <div class="pt-3 border-t border-white/10 flex items-center justify-between text-xs font-mono">
+                        <span class="text-slate-400">HOLDER: SIDHARTH K V</span>
+                        <a href="${cert.detailPage || cert.verifyUrl || '#certifications'}" ${cert.detailPage ? `onclick="openCertificatePage(event, '${cert.detailPage}', '${cert.code}')"` : ""} class="liquid-press px-4 py-2 rounded-full ${cert.detailPage ? 'bg-copper-500/20 text-copper-300 border border-copper-500/50 group-hover:bg-copper-500 group-hover:text-obsidian-950' : 'bg-white/10 text-solder-400'} flex items-center gap-1.5 font-semibold">
+                            <span>${cert.detailPage ? "Open Certificate Webpage →" : "Verified Record"}</span>
+                            <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </div>
+            `).join('');
+
+            lucide.createIcons();
+            initInteractiveCardsAndObserver();
+        }
+
+        function openCertificatePage(event, certificatePage, certCode) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+            playBusTransitionHUD(`NPTEL CREDENTIAL // ${certCode}`, "0x4110_CERT", () => {
+                window.location.href = certificatePage;
+            });
+        }
+
+        function playBusTransitionHUD(titleText, hexAddr, callback) {
+            if (!transitionFxEnabled) {
+                callback();
+                return;
+            }
+            const overlay = document.getElementById("bus-transition-overlay");
+            const titleEl = document.getElementById("bus-target-title");
+            const addrEl = document.getElementById("bus-target-addr");
+            const fillEl = document.getElementById("bus-progress-fill");
+
+            titleEl.textContent = titleText;
+            addrEl.textContent = `BUS_ADDR: ${hexAddr}`;
+            fillEl.style.width = "0%";
+            overlay.classList.add("active");
+
+            requestAnimationFrame(() => { fillEl.style.width = "100%"; });
+
+            setTimeout(() => {
+                callback();
+                setTimeout(() => {
+                    overlay.classList.remove("active");
+                    fillEl.style.width = "0%";
+                }, 180);
+            }, 480);
+        }
+
+        function triggerNavTransition(event, targetSelector, sectionTitle, hexAddr) {
+            if (event) event.preventDefault();
+            const targetEl = document.querySelector(targetSelector);
+            if (!targetEl) return;
+            playBusTransitionHUD(sectionTitle, hexAddr, () => {
+                targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+            });
+        }
+
+        function triggerModalWithTransition(projectId, designator) {
+            playBusTransitionHUD(`DATASHEET // ${designator}`, "0x4080_SPEC", () => {
+                const proj = portfolioData.projects.find(p => p.id === projectId);
+                if (!proj) return;
+                document.getElementById("modal-category").textContent = proj.designator;
+                document.getElementById("modal-title").textContent = proj.title;
+                document.getElementById("modal-collab").textContent = proj.collaborators;
+                document.getElementById("modal-description").textContent = proj.summary;
+                document.getElementById("modal-block-diagram").textContent = proj.blockDiagram;
+                document.getElementById("modal-stack").innerHTML = proj.stack.map(s => `<span class="font-mono text-xs px-3 py-1 rounded-full bg-copper-500/15 text-copper-400 border border-copper-500/30">${s}</span>`).join("");
+                document.getElementById("modal-bom").innerHTML = proj.bom.map(i => `<li>▸ ${i}</li>`).join("");
+                document.getElementById("modal-highlights").innerHTML = proj.highlights.map(i => `<li>✔ ${i}</li>`).join("");
+                document.getElementById("project-modal").classList.remove("hidden");
+                lucide.createIcons();
+            });
+        }
+
+        function closeProjectModal() {
+            document.getElementById("project-modal").classList.add("hidden");
+        }
+
+        function toggleTransitionFX() {
+            transitionFxEnabled = !transitionFxEnabled;
+            document.getElementById("fx-toggle-label").textContent = transitionFxEnabled ? "FX: ON" : "FX: OFF";
+            showToast(transitionFxEnabled ? "Liquid Glass Transitions ON" : "Instant Navigation Mode");
+        }
+
+        function setPortraitOptics(mode) {
+            const frame = document.getElementById("hero-portrait-frame");
+            frame.classList.remove("optics-optical", "optics-phosphor", "optics-mono");
+            frame.classList.add(`optics-${mode}`);
+        }
+
+        function togglePortraitTuner() {
+            document.getElementById("portrait-tuner-drawer").classList.toggle("hidden");
+        }
+
+        function updatePortraitFraming() {
+            const zoom = document.getElementById("portrait-zoom-slider").value;
+            const panX = document.getElementById("portrait-panx-slider").value;
+            const panY = document.getElementById("portrait-pany-slider").value;
+            document.getElementById("zoom-val-label").textContent = `${parseFloat(zoom).toFixed(2)}x`;
+            document.getElementById("panx-val-label").textContent = `${panX}%`;
+            document.getElementById("pany-val-label").textContent = `${panY}%`;
+            document.documentElement.style.setProperty("--portrait-scale", zoom);
+            document.documentElement.style.setProperty("--portrait-pos-x", `${panX}%`);
+            document.documentElement.style.setProperty("--portrait-pos-y", `${panY}%`);
+        }
+
+        function handlePortraitUpload(event) {
+            const file = event.target.files?.[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                portfolioData.portraitDataUrl = e.target.result;
+                saveState();
+                document.querySelectorAll(".sync-portrait-img").forEach(img => { img.src = e.target.result; });
+                showToast("Portrait bundled into browser storage!");
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function copyEmailToClipboard() {
+            navigator.clipboard?.writeText(portfolioData.links.email);
+            showToast("Copied email: " + portfolioData.links.email);
+        }
+
+        function handleContactSubmit(e) {
+            e.preventDefault();
+            showToast("Opening mail dispatch...");
+        }
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle("dark");
+        }
+
+        function toggleEditMode() {
+            isEditMode = !isEditMode;
+            document.body.classList.toggle("edit-mode-active", isEditMode);
+            document.getElementById("edit-mode-banner").classList.toggle("hidden", !isEditMode);
+            document.querySelectorAll(".editable-field").forEach(el => {
+                el.setAttribute("contenteditable", isEditMode ? "true" : "false");
+            });
+        }
+
+        function resetPortfolioData() {
+            localStorage.removeItem("skv_portfolio_v3");
+            location.reload();
+        }
+
+        function exportCustomizedHTML() {
+            const serialized = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const blob = new Blob([serialized], { type: "text/html;charset=utf-8" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "Sidharth_KV_Hardware_Portfolio.html";
+            a.click();
+        }
+
+        function downloadEngineeringDossier() {
+            const text = "SIDHARTH K V — ELECTRONICS & EMBEDDED HARDWARE PORTFOLIO\n3x NPTEL Certified (Control Systems Elite 64%, Integrated Circuits Elite 67%, Digital Circuits 53%)";
+            const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+            const a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "SIDHARTH_K_V_Dossier.txt";
+            a.click();
+        }
+
+        // DSO Oscilloscope Engine
+        let dsoMode = "audio";
+        let dsoRunning = true;
+        let phaseOffset = 0;
+
+        function setDsoMode(mode) {
+            dsoMode = mode;
+            ["audio", "i2s", "lora", "failover"].forEach(id => {
+                const btn = document.getElementById("mode-btn-" + id);
+                btn.className = id === mode
+                    ? "dso-mode-btn px-3 py-1 rounded-full font-mono text-[11px] bg-copper-500 text-obsidian-950 font-semibold"
+                    : "dso-mode-btn px-3 py-1 rounded-full font-mono text-[11px] bg-white/10 text-slate-300 border border-white/15";
+            });
+        }
+
+        function toggleDsoRun() {
+            dsoRunning = !dsoRunning;
+            document.getElementById("dso-run-text").textContent = dsoRunning ? "HOLD" : "RUN";
+        }
+
+        function initOscilloscope() {
+            const canvas = document.getElementById("dso-canvas");
+            const ctx = canvas.getContext("2d");
+            const freqSlider = document.getElementById("dso-freq");
+            const ampSlider = document.getElementById("dso-amp");
+
+            function resize() {
+                const rect = canvas.getBoundingClientRect();
+                canvas.width = rect.width * window.devicePixelRatio;
+                canvas.height = rect.height * window.devicePixelRatio;
+                ctx.setTransform(window.devicePixelRatio, 0, 0, window.devicePixelRatio, 0, 0);
+            }
+            window.addEventListener("resize", resize);
+            resize();
+
+            function draw() {
+                const w = canvas.clientWidth;
+                const h = canvas.clientHeight;
+                const freq = parseFloat(freqSlider.value);
+                const amp = parseFloat(ampSlider.value);
+                ctx.clearRect(0, 0, w, h);
+
+                ctx.strokeStyle = "#f59e0b";
+                ctx.lineWidth = 2.2;
+                ctx.beginPath();
+                for (let x = 0; x < w; x++) {
+                    const t = (x / w) * Math.PI * 2 * freq + phaseOffset;
+                    const y = h * 0.36 + Math.sin(t) * 34 * amp;
+                    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                ctx.strokeStyle = "#10b981";
+                ctx.beginPath();
+                for (let x = 0; x < w; x++) {
+                    const t = (x / w) * Math.PI * 2 * freq + phaseOffset;
+                    const y = h * 0.72 + Math.sin(t * 0.5 - 0.4) * 30 * amp;
+                    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                if (dsoRunning) phaseOffset += 0.05;
+                requestAnimationFrame(draw);
+            }
+            requestAnimationFrame(draw);
+        }
+
+        function initInteractiveCardsAndObserver() {
+            document.querySelectorAll(".card-hardware").forEach(card => {
+                if (card.dataset.tiltBound) return;
+                card.dataset.tiltBound = "true";
+                card.addEventListener("mousemove", e => {
+                    const rect = card.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    card.style.setProperty("--mouse-x", `${x}px`);
+                    card.style.setProperty("--mouse-y", `${y}px`);
+                    const rotateX = ((y - rect.height / 2) / (rect.height / 2)) * -3.8;
+                    const rotateY = ((x - rect.width / 2) / (rect.width / 2)) * 3.8;
+                    card.style.transform = `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-4px)`;
+                });
+                card.addEventListener("mouseleave", () => {
+                    card.style.transform = "perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0px)";
+                });
+            });
+
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add("revealed");
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll(".reveal-item, .card-hardware").forEach(el => observer.observe(el));
+        }
+
+        function runBootSequence() {
+            const overlay = document.getElementById("bootloader-overlay");
+            const bar = document.getElementById("boot-progress-bar");
+            const pct = document.getElementById("boot-percent");
+            const log = document.getElementById("boot-terminal-log");
+            overlay.classList.remove("boot-complete");
+            log.innerHTML = `
+                <div class="text-copper-400">[0.01s] INIT: SIDHARTH K V // iOS 26 LIQUID GLASS ENGINE</div>
+                <div class="text-solder-400">[0.18s] VERIFIED: NPTEL Control Systems (Elite 64% • 25/25)</div>
+                <div class="text-solder-400">[0.32s] VERIFIED: NPTEL Integrated Circuits (Elite 67%)</div>
+                <div class="text-signal-400">[0.48s] VERIFIED: NPTEL Digital Circuits (53% • IIT KGP)</div>
+            `;
+            let p = 0;
+            const timer = setInterval(() => {
+                p += 10;
+                bar.style.width = p + "%";
+                pct.textContent = p + "%";
+                if (p >= 100) {
+                    clearInterval(timer);
+                    setTimeout(finishBootSequence, 200);
+                }
+            }, 55);
+        }
+
+        function finishBootSequence() {
+            document.getElementById("bootloader-overlay").classList.add("boot-complete");
+        }
+
+        function replayBootSequence() {
+            runBootSequence();
+        }
+
+        window.onload = function() {
+            renderProjects();
+            renderCertifications();
+            initOscilloscope();
+            initInteractiveCardsAndObserver();
+            runBootSequence();
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
