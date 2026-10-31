@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#050811">
+  <title>Control Systems (Elite) — NPTEL Certificate | SIDHARTH K V</title>
+  <link rel="stylesheet" href="certificate.css">
+  <script>
+    window.CS_CERT_CANDIDATES = [
+      "Screenshot_2026-10-29-18-57-01-40_e5d3893ac03954c6bb675ef2555b879b.jpg",
+      "CONTROL SYSTEMS.jpg",
+      "CONTROL SYSTEMS.jfif",
+      "assets/nptel-control-systems.jpg",
+      "assets/Screenshot_2026-10-29-18-57-01-40_e5d3893ac03954c6bb675ef2555b879b.jpg"
+    ];
+    window.resolveCsCertImg = function(imgEl) {
+      const idx = parseInt(imgEl.dataset.tryIndex || "0", 10);
+      if (idx < window.CS_CERT_CANDIDATES.length) {
+        imgEl.dataset.tryIndex = String(idx + 1);
+        imgEl.src = window.CS_CERT_CANDIDATES[idx];
+      }
+    };
+  </script>
+</head>
+<body>
+  <div class="ambient"></div>
+
+  <!-- iOS 26 Liquid Glass Verification HUD -->
+  <div id="verify-hud" class="verify-hud">
+    <div class="verify-box">
+      <div class="verify-tag">★ SWAYAM-NPTEL ELITE CREDENTIAL VERIFICATION</div>
+      <div id="verify-title" class="verify-title">VERIFYING: CONTROL SYSTEMS (IIT MADRAS)</div>
+      <div id="verify-roll" class="verify-roll">CANDIDATE: SIDHARTH K V • ROLL: NPTEL26DE27S754700629</div>
+      <div class="verify-bar-wrap">
+        <div id="verify-bar" class="verify-bar"></div>
+      </div>
+    </div>
+  </div>
+
+  <main class="app">
+    <header class="topbar">
+      <div class="nav-actions">
+        <a class="back" href="Sidharth_KV_Hardware_Portfolio.html#certifications" onclick="navigateWithHud(event, this.href, 'RETURNING TO HARDWARE PORTFOLIO', 'SYS_ID: SKV-ECE-2026')">
+          <span>‹</span> Back to Portfolio
+        </a>
+        <a class="switch-cert" href="certificate-integrated-circuits.html" onclick="navigateWithHud(event, this.href, 'SWITCHING TO: INTEGRATED CIRCUITS (ELITE)', 'ROLL: NPTEL26EE33S1154400163')">
+          ★ Integrated Circuits (Elite) →
+        </a>
+        <a class="switch-cert" href="certificate-digital-circuits.html" onclick="navigateWithHud(event, this.href, 'SWITCHING TO: DIGITAL CIRCUITS (IIT KGP)', 'ROLL: NPTEL25EE125S1155900740')">
+          Digital Circuits →
+        </a>
+      </div>
+      <div class="brand"><b>●</b> SIDHARTH K V / NPTEL ELITE VIEWER</div>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow"><i></i> Verified NPTEL Elite Achievement • IIT Madras</div>
+      <h1>Control<br><em>Systems.</em></h1>
+      <p>
+        NPTEL Elite Online Certification (Funded by the MoE, Govt. of India) awarded to <strong>SIDHARTH K V</strong> for successfully completing the 12-week Control Systems course from Indian Institute of Technology Madras with a perfect <strong>25/25</strong> assignment score.
+      </p>
+    </section>
+
+    <figure class="certificate-stage" id="certificate" aria-label="Control Systems NPTEL Elite certificate awarded to SIDHARTH K V. Click to zoom.">
+      <div class="certificate-card">
+        <div class="cert-laser-line"></div>
+        <img
+          src="Screenshot_2026-10-29-18-57-01-40_e5d3893ac03954c6bb675ef2555b879b.jpg"
+          onerror="window.resolveCsCertImg(this)"
+          alt="NPTEL Elite Online Certification for Control Systems awarded to SIDHARTH K V"
+        >
+      </div>
+      <div class="badge"><i></i> Elite Credential · 64% (25/25 Assignments) · SIDHARTH K V</div>
+    </figure>
+
+    <p class="hint">Click the certificate to inspect it closely · Press <kbd>Esc</kbd> to reset zoom</p>
+
+    <section class="metadata">
+      <div class="meta">
+        <small>Candidate Name</small>
+        <strong>SIDHARTH K V</strong>
+      </div>
+      <div class="meta">
+        <small>Issuing Institute &amp; Signatories</small>
+        <strong>IIT Madras · Prof. Andrew Thangaraj &amp; Prof. Vignesh Muthuvijayan</strong>
+      </div>
+      <div class="meta">
+        <small>Course Session &amp; Credits</small>
+        <strong>Jul–Oct 2026 (12 Weeks · 4 Credits)</strong>
+      </div>
+      <div class="meta">
+        <small>Consolidated Score</small>
+        <strong>64% · Elite (Registered Cohort: 888)</strong>
+      </div>
+      <div class="meta">
+        <small>Score Breakdown</small>
+        <strong>Assignments: 25/25 (100%) · Exam: 39/75</strong>
+      </div>
+      <div class="meta">
+        <small>NPTEL Roll Number</small>
+        <strong>NPTEL26DE27S754700629</strong>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const c = document.getElementById('certificate');
+    c.addEventListener('click', () => c.classList.toggle('is-zoomed'));
+    window.addEventListener('keydown', e => {
+      if (e.key === 'Escape') c.classList.remove('is-zoomed');
+    });
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const hud = document.getElementById('verify-hud');
+      const bar = document.getElementById('verify-bar');
+      requestAnimationFrame(() => { bar.style.width = '100%'; });
+      setTimeout(() => { hud.classList.add('hidden'); }, 620);
+    });
+
+    function navigateWithHud(e, targetUrl, title, subtitle) {
+      e.preventDefault();
+      const hud = document.getElementById('verify-hud');
+      const bar = document.getElementById('verify-bar');
+      document.getElementById('verify-title').textContent = title;
+      document.getElementById('verify-roll').textContent = subtitle;
+      bar.style.width = '0%';
+      hud.classList.remove('hidden');
+      requestAnimationFrame(() => { bar.style.width = '100%'; });
+      setTimeout(() => { window.location.href = targetUrl; }, 520);
+    }
+  </script>
+</body>
+</html>
